@@ -1,0 +1,44 @@
+<section class="p-6">
+    <h1 class="text-3xl font-bold text-center text-blue-600 mb-8">Gestion des utilisateurs</h1>
+  
+    <div class="flex flex-col md:flex-row gap-4 mb-8">
+      <input [(ngModel)]="newUser.email" placeholder="Email" class="p-2 border rounded flex-1">
+      <input [(ngModel)]="newUser.password" placeholder="Mot de passe" type="password" class="p-2 border rounded flex-1">
+      <select [(ngModel)]="newUser.role" class="p-2 border rounded">
+        <option value="citoyen">Citoyen</option>
+        <option value="modérateur">Modérateur</option>
+        <option value="administrateur">Administrateur</option>
+        <option value="super-administrateur">Super-Administrateur</option>
+      </select>
+      <button (click)="addUser()" class="bg-green-500 text-white px-4 py-2 rounded hover:bg-green-600">
+        Ajouter
+      </button>
+    </div>
+  
+    <table class="w-full bg-white rounded shadow">
+      <thead class="bg-gray-200">
+        <tr>
+          <th class="p-3 text-left">Email</th>
+          <th class="p-3 text-left">Role</th>
+          <th class="p-3 text-left">Statut</th>
+          <th class="p-3 text-left">Actions</th>
+        </tr>
+      </thead>
+      <tbody>
+        @for(user of users ; track $index){
+            <tr class="border-b">
+                <td class="p-3">{{ user.email }}</td>
+                <td class="p-3 capitalize">{{ user.role }}</td>
+                <td class="p-3">{{ user.actif ? 'Actif' : 'Désactivé' }}</td>
+                <td class="p-3">
+                  <button (click)="toggleActive(user.id)" class="bg-yellow-400 text-white px-3 py-1 rounded hover:bg-yellow-500">
+                    {{ user.actif ? 'Désactiver' : 'Réactiver' }}
+                  </button>
+                </td>
+              </tr>
+        }
+        
+      </tbody>
+    </table>
+  </section>
+  

@@ -2,7 +2,6 @@
   <h1 class="text-3xl font-bold mb-8 text-center text-blue-600">Gestion des ressources</h1>
 
   <div class="flex justify-end mb-4">
-    <!-- Correction ici : on ouvre la modale -->
     <button (click)="showAddModal = true" class="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600">
       Ajouter
     </button>
@@ -44,9 +43,12 @@
   <div class="flex gap-4 mb-4">
     <select [(ngModel)]="newRessource.categorie" name="categorie" required class="w-full p-2 border rounded">
       <option value="" disabled selected hidden>Choisir une catégorie</option>
-      <option *ngFor="let category of categories" [value]="category">
-        {{ category }}
-      </option>
+      @for(category of categories ; track $index){
+        <option [value]="category">
+          {{ category }}
+        </option>
+      }
+      
     </select>
         <button (click)="addCategory()" class="bg-green-500 text-white px-4 py-2 rounded hover:bg-green-600">
       Ajouter
@@ -54,12 +56,15 @@
   </div>
 
   <div class="grid grid-cols-2 md:grid-cols-3 gap-4">
-    <div *ngFor="let category of categories" class="bg-white p-4 rounded shadow flex justify-between items-center">
-      <span>{{ category }}</span>
-      <button (click)="deleteCategory(category)" class="bg-red-500 text-white px-3 py-1 rounded hover:bg-red-600">
-        Supprimer
-      </button>
-    </div>
+    @for(category of categories ; track $index){
+      <div *ngFor="let category of categories" class="bg-white p-4 rounded shadow flex justify-between items-center">
+        <span>{{ category }}</span>
+        <button (click)="deleteCategory(category)" class="bg-red-500 text-white px-3 py-1 rounded hover:bg-red-600">
+          Supprimer
+        </button>
+      </div>
+    }
+    
   </div>
 </section>
 

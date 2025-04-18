@@ -1,11 +1,29 @@
 <nav class="bg-blue-500 p-4 flex justify-between items-center">
-    <div class="text-white font-bold text-lg">
-      (RE)Sources Relationnelles
-    </div>
-    <div class="space-x-4">
-      <a routerLink="/" class="text-white hover:underline">Accueil</a>
-      <a routerLink="/resources" class="text-white hover:underline">Ressources</a>
+  <div class="text-white font-bold text-lg">
+    (RE)Sources Relationnelles
+  </div>
+  <div class="space-x-4 flex items-center">
+    <a routerLink="/" class="text-white hover:underline">Accueil</a>
+    <a routerLink="/resources" class="text-white hover:underline">Ressources</a>
+
+    <ng-container *ngIf="user$ | async as user; else notLogged">
+       @if(user.role === 'administrateur' || user.role === 'super-administrateur'){
+        <ng-container>
+          <a routerLink="/admin" class="text-white hover:underline">Gestion Ressources</a>
+        </ng-container>
+       }
+
+       @if(user.role === 'super-administrateur'){
+        <ng-container>
+          <a routerLink="/admin-users" class="text-white hover:underline">Gestion Comptes</a>
+        </ng-container>
+       }
+      <span class="text-white ml-4">Bonjour, {{ user.role | titlecase }}</span>
+      <button (click)="logout()" class="text-white hover:underline ml-2">Déconnexion</button>
+    </ng-container>
+
+    <ng-template #notLogged>
       <a routerLink="/login" class="text-white hover:underline">Connexion</a>
-    </div>
-  </nav>
-  
+    </ng-template>
+  </div>
+</nav>
