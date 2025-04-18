@@ -42,8 +42,13 @@
   <h2 class="text-2xl font-bold mb-4 text-center text-blue-600">Gestion des catégories</h2>
 
   <div class="flex gap-4 mb-4">
-    <input [(ngModel)]="newCategory" type="text" placeholder="Nouvelle catégorie" class="flex-1 p-2 border rounded">
-    <button (click)="addCategory()" class="bg-green-500 text-white px-4 py-2 rounded hover:bg-green-600">
+    <select [(ngModel)]="newRessource.categorie" name="categorie" required class="w-full p-2 border rounded">
+      <option value="" disabled selected hidden>Choisir une catégorie</option>
+      <option *ngFor="let category of categories" [value]="category">
+        {{ category }}
+      </option>
+    </select>
+        <button (click)="addCategory()" class="bg-green-500 text-white px-4 py-2 rounded hover:bg-green-600">
       Ajouter
     </button>
   </div>
