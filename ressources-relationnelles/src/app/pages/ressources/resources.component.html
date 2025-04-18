@@ -1,0 +1,37 @@
+<section class="p-6 bg-gray-100 min-h-screen">
+    <h1 class="text-3xl font-bold mb-8 text-center text-blue-600">Toutes les ressources</h1>
+  
+    <!-- Filtres -->
+    <div class="flex flex-col md:flex-row justify-center gap-4 mb-8">
+      <select [(ngModel)]="selectedType" (change)="applyFilters()" class="p-2 rounded border">
+        <option value="all">Toutes les ressources</option>
+        <option value="publique">Ressources publiques</option>
+        <option value="restreinte">Ressources restreintes</option>
+      </select>
+  
+      <select [(ngModel)]="selectedSort" (change)="applyFilters()" class="p-2 rounded border">
+        <option value="recent">Plus récentes</option>
+        <option value="oldest">Plus anciennes</option>
+      </select>
+    </div>
+  
+    <!-- Liste des ressources -->
+    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+        @for(ressource of displayedRessources; track $index){
+            <div  class="bg-white p-6 rounded-lg shadow hover:shadow-lg transition">
+                <h2 class="text-xl font-semibold text-blue-500 mb-2">{{ ressource.titre }}</h2>
+                <p class="text-gray-600 mb-4">{{ ressource.description }}</p>
+                <p class="text-sm text-gray-400 mb-2">Catégorie : {{ ressource.categorie }}</p>
+                <p class="text-sm text-gray-400">Créée le : {{ ressource.dateCreation | date }}</p>
+                <div class="mt-4">
+                    <a [routerLink]="['/resource', ressource.id]" class="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600 transition inline-block">
+                        Voir la ressource
+                      </a>
+                      
+                </div>
+              </div>
+        }
+      
+    </div>
+  </section>
+  

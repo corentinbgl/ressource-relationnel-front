@@ -1,0 +1,91 @@
+<section class="p-6 bg-gray-100 min-h-screen">
+  <h1 class="text-3xl font-bold mb-8 text-center text-blue-600">Gestion des ressources</h1>
+
+  <div class="flex justify-end mb-4">
+    <!-- Correction ici : on ouvre la modale -->
+    <button (click)="showAddModal = true" class="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600">
+      Ajouter
+    </button>
+  </div>
+
+  <div class="overflow-x-auto">
+    <table class="w-full bg-white rounded-lg shadow">
+      <thead class="bg-gray-200 text-gray-700">
+        <tr>
+          <th class="p-3 text-left">Titre</th>
+          <th class="p-3 text-left">Catégorie</th>
+          <th class="p-3 text-left">Type</th>
+          <th class="p-3 text-left">Actions</th>
+        </tr>
+      </thead>
+      <tbody>
+        @for(ressource of ressources; track $index) {
+          <tr class="border-b">
+            <td class="p-3">{{ ressource.titre }}</td>
+            <td class="p-3">{{ ressource.categorie }}</td>
+            <td class="p-3">{{ ressource.type | titlecase }}</td>
+            <td class="p-3 space-x-2">
+              <button (click)="editRessource(ressource)" class="bg-yellow-400 text-white px-3 py-1 rounded hover:bg-yellow-500">
+                Modifier
+              </button>
+              <button (click)="deleteRessource(ressource.id)" class="bg-red-500 text-white px-3 py-1 rounded hover:bg-red-600">
+                Supprimer
+              </button>
+            </td>
+          </tr>
+        }
+      </tbody>
+    </table>
+
+    <!-- Gestion des catégories -->
+<section class="mt-12">
+  <h2 class="text-2xl font-bold mb-4 text-center text-blue-600">Gestion des catégories</h2>
+
+  <div class="flex gap-4 mb-4">
+    <input [(ngModel)]="newCategory" type="text" placeholder="Nouvelle catégorie" class="flex-1 p-2 border rounded">
+    <button (click)="addCategory()" class="bg-green-500 text-white px-4 py-2 rounded hover:bg-green-600">
+      Ajouter
+    </button>
+  </div>
+
+  <div class="grid grid-cols-2 md:grid-cols-3 gap-4">
+    <div *ngFor="let category of categories" class="bg-white p-4 rounded shadow flex justify-between items-center">
+      <span>{{ category }}</span>
+      <button (click)="deleteCategory(category)" class="bg-red-500 text-white px-3 py-1 rounded hover:bg-red-600">
+        Supprimer
+      </button>
+    </div>
+  </div>
+</section>
+
+
+    <!-- Modal d'ajout / modification -->
+    @if(showAddModal) {
+      <div class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
+        <div class="bg-white p-6 rounded-lg shadow w-full max-w-md relative">
+          <h2 class="text-2xl font-bold mb-4">{{ isEditing ? 'Modifier Ressource' : 'Nouvelle Ressource' }}</h2>
+
+          <form (ngSubmit)="addOrUpdateRessource()" #addForm="ngForm" class="space-y-4">
+            <input [(ngModel)]="newRessource.titre" name="titre" type="text" placeholder="Titre" required class="w-full p-2 border rounded" />
+            <textarea [(ngModel)]="newRessource.description" name="description" placeholder="Description" required class="w-full p-2 border rounded"></textarea>
+            <input [(ngModel)]="newRessource.categorie" name="categorie" type="text" placeholder="Catégorie" required class="w-full p-2 border rounded" />
+
+            <select [(ngModel)]="newRessource.type" name="type" class="w-full p-2 border rounded">
+              <option value="publique">Publique</option>
+              <option value="restreinte">Restreinte</option>
+            </select>
+
+            <div class="flex justify-end gap-4">
+              <button type="button" (click)="showAddModal = false" class="px-4 py-2 border rounded hover:bg-gray-100">
+                Annuler
+              </button>
+              <button type="submit" class="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600">
+                {{ isEditing ? 'Mettre à jour' : 'Ajouter' }}
+              </button>
+            </div>
+          </form>
+        </div>
+      </div>
+    }
+  </div>
+</section>
