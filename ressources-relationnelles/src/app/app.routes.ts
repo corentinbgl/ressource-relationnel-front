@@ -5,6 +5,8 @@ import { ResourcesComponent } from './pages/ressources/resources.component';
 import { ResourceDetailsComponent } from './pages/resource-details/resource-details.component';
 import { AdminComponent } from './pages/admin/admin.component';
 import { AdminUsersComponent } from './pages/admin-users/admin-users.component';
+import { ProgressionComponent } from './pages/progression.component';
+import { AdminDashboardComponent } from './pages/admin-dashboard.component';
 
 export const routes: Routes = [
     { path: '', component: HomeComponent },
@@ -13,6 +15,8 @@ export const routes: Routes = [
     { path: 'resource/:id', component: ResourceDetailsComponent },
     { path: 'admin', component: AdminComponent },
     { path: 'admin-users', component: AdminUsersComponent },
+    { path: 'progression', component: ProgressionComponent },
+    { path: 'admin-dashboard', component: AdminDashboardComponent }
 
   ];
   

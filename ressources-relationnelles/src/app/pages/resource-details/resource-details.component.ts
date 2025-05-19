@@ -7,6 +7,7 @@ import { Commentaire } from '../../models/commentaire.model';
 import { CommentaireService } from '../../service/commentaire.service';
 import { AuthService } from '../../service/auth.service';
 import { FormsModule } from '@angular/forms';
+import { ProgressionService } from '../../service/progression.service';
 
 @Component({
   selector: 'app-resource-details',
@@ -30,7 +31,8 @@ export class ResourceDetailsComponent implements OnInit {
     private route: ActivatedRoute,
     private ressourceService: RessourceService,
     private commentaireService: CommentaireService,
-    private authService: AuthService
+    private authService: AuthService,
+    private progressionService : ProgressionService,
   ) {}
 
   ngOnInit() {
@@ -101,4 +103,30 @@ export class ResourceDetailsComponent implements OnInit {
   deleteCommentaire(id: number) {
     this.commentaireService.deleteCommentaire(id);
   }
+
+  get isFavori(): boolean {
+    return this.ressource ? this.progressionService.isFavori(this.ressource.id) : false;
+  }
+  
+  get isExploitee(): boolean {
+    return this.ressource ? this.progressionService.isExploitee(this.ressource.id) : false;
+  }
+  
+  get isMiseDeCote(): boolean {
+    return this.ressource ? this.progressionService.isMiseDeCote(this.ressource.id) : false;
+  }
+
+  
+  toggleFavori() {
+    if (this.ressource) this.progressionService.toggleFavori(this.ressource.id);
+  }
+  
+  toggleExploitee() {
+    if (this.ressource) this.progressionService.toggleExploitee(this.ressource.id);
+  }
+  
+  toggleMiseDeCote() {
+    if (this.ressource) this.progressionService.toggleMiseDeCote(this.ressource.id);
+  }
+  
 }

@@ -44,7 +44,6 @@ newRessource: Partial<Ressource> = {
 addOrUpdateRessource() {
   if (this.newRessource.titre && this.newRessource.description && this.newRessource.categorie) {
     if (this.isEditing && this.editingRessourceId !== null) {
-      // 🔵 MODE MODIFICATION
       const index = this.ressources.findIndex(r => r.id === this.editingRessourceId);
       if (index !== -1) {
         this.ressources[index] = {
@@ -53,11 +52,10 @@ addOrUpdateRessource() {
           description: this.newRessource.description!,
           categorie: this.newRessource.categorie!,
           type: this.newRessource.type!,
-          dateCreation: this.ressources[index].dateCreation // on conserve la date d'origine
+          dateCreation: this.ressources[index].dateCreation 
         };
       }
     } else {
-      // 🟢 MODE AJOUT
       const newId = Math.max(...this.ressources.map(r => r.id)) + 1;
       const newRessourceFinal: Ressource = {
         id: newId,

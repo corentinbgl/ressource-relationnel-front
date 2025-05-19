@@ -7,6 +7,26 @@
       <p class="text-gray-500 mb-2">Catégorie : {{ ressource.categorie }}</p>
       <p class="text-gray-500 mb-2">Type : {{ ressource.type | titlecase }}</p>
       <p class="text-gray-400 text-sm">Créée le : {{ ressource.dateCreation | date }}</p>
+      <div class="flex flex-wrap gap-4 mt-4">
+        <button (click)="toggleFavori()"
+          class="px-4 py-2 rounded text-white"
+          [ngClass]="isFavori ? 'bg-yellow-500' : 'bg-gray-400'">
+          {{ isFavori ? '★ Favori' : '☆ Ajouter aux favoris' }}
+        </button>
+      
+        <button (click)="toggleExploitee()"
+          class="px-4 py-2 rounded text-white"
+          [ngClass]="isExploitee ? 'bg-green-500' : 'bg-gray-400'">
+          {{ isExploitee ? '✔ Exploitée' : 'Marquer comme exploitée' }}
+        </button>
+      
+        <button (click)="toggleMiseDeCote()"
+          class="px-4 py-2 rounded text-white"
+          [ngClass]="isMiseDeCote ? 'bg-blue-500' : 'bg-gray-400'">
+          {{ isMiseDeCote ? '📌 Mise de côté' : 'Mettre de côté' }}
+        </button>
+      </div>
+      
   
       <div class="mt-8">
         <a routerLink="/resources" class="text-blue-500 hover:underline">← Retour aux ressources</a>

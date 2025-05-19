@@ -18,6 +18,10 @@
           <a routerLink="/admin-users" class="text-white hover:underline">Gestion Comptes</a>
         </ng-container>
        }
+       <ng-container *ngIf="user.role === 'administrateur' || user.role === 'super-administrateur'">
+        <a routerLink="/admin-dashboard" class="text-white hover:underline">Tableau de bord admin</a>
+      </ng-container>
+      
       <span class="text-white ml-4">Bonjour, {{ user.role | titlecase }}</span>
       <button (click)="logout()" class="text-white hover:underline ml-2">Déconnexion</button>
     </ng-container>
