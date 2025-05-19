@@ -1,61 +1,34 @@
 import { Injectable } from '@angular/core';
+import { HttpClient } from '@angular/common/http';
 import { Ressource } from '../models/ressource.model';
-import { of, BehaviorSubject } from 'rxjs';
+import { environment } from '../../environments/environments';
+import { Observable } from 'rxjs';
 
 @Injectable({
   providedIn: 'root'
 })
 export class RessourceService {
+  private api = `${environment.apiUrl}/Ressource`;
 
-  private ressources: Ressource[] = [
-    {
-      id: 1,
-      titre: 'Communiquer en famille',
-      description: 'Améliorez la communication au sein de votre foyer.',
-      type: 'publique',
-      categorie: 'Famille',
-      dateCreation: new Date('2024-04-01')
-    },
-    {
-      id: 2,
-      titre: 'Gérer les conflits en entreprise',
-      description: 'Apprenez à désamorcer les tensions dans un cadre professionnel.',
-      type: 'restreinte',
-      categorie: 'Travail',
-      dateCreation: new Date('2024-03-25')
-    },
-    {
-      id: 3,
-      titre: 'Développer des amitiés sincères',
-      description: 'Construire des relations authentiques et durables.',
-      type: 'publique',
-      categorie: 'Amitié',
-      dateCreation: new Date('2024-03-20')
-    }
-  ];
+  constructor(private http: HttpClient) {}
 
-  private categoriesSubject = new BehaviorSubject<string[]>(['Famille', 'Travail', 'Amitié']);
-  categories$ = this.categoriesSubject.asObservable();
-
-  constructor() { }
-
-  getAllRessources() {
-    return of(this.ressources);
+  getAll(): Observable<Ressource[]> {
+    return this.http.get<Ressource[]>(this.api, { responseType: 'json' as const });
   }
 
-  getCategories() {
-    return this.categories$;
+  getById(id: number): Observable<Ressource> {
+    return this.http.get<Ressource>(`${this.api}/${id}`);
   }
 
-  addCategory(category: string) {
-    const current = this.categoriesSubject.getValue();
-    if (!current.includes(category)) {
-      this.categoriesSubject.next([...current, category]);
-    }
+  create(ressource: Ressource): Observable<Ressource> {
+    return this.http.post<Ressource>(this.api, ressource);
   }
 
-  deleteCategory(category: string) {
-    const updated = this.categoriesSubject.getValue().filter(cat => cat !== category);
-    this.categoriesSubject.next(updated);
+  update(ressource: Ressource): Observable<void> {
+    return this.http.put<void>(`${this.api}/${ressource.id}`, ressource);
+  }
+
+  delete(id: number): Observable<void> {
+    return this.http.delete<void>(`${this.api}/${id}`);
   }
 }

@@ -5,6 +5,7 @@ import { ProgressionService } from '../service/progression.service';
 import { CommentaireService } from '../service/commentaire.service';
 import { UserService } from '../service/user.service';
 import { RouterModule } from '@angular/router';
+import { AuthService } from '../service/auth.service';
 
 @Component({
   selector: 'app-admin-dashboard',
@@ -24,22 +25,33 @@ export class AdminDashboardComponent implements OnInit {
     private ressourceService: RessourceService,
     private progressionService: ProgressionService,
     private commentaireService: CommentaireService,
-    private userService: UserService
+    private userService: UserService,
+    private authService: AuthService
   ) {}
 
   ngOnInit(): void {
-    this.ressourceService.getAllRessources().subscribe(data => {
-      this.totalRessources = data.length;
+    this.ressourceService.getAll().subscribe(ressources => {
+      this.totalRessources = ressources.length;
+  
+      // Total commentaires
+      let totalCommentaires = 0;
+      ressources.forEach(r => {
+        this.commentaireService.getByRessource(r.id).subscribe(coms => {
+          totalCommentaires += coms.length;
+          this.totalCommentaires = totalCommentaires;
+        });
+      });
     });
-
-    const prog = this.progressionService.progression;
-    this.totalFavoris = prog.favoris.length;
-    this.totalExploitees = prog.exploitees.length;
-
-    this.commentaireService.commentaires$.subscribe(coms => {
-      this.totalCommentaires = coms.length;
+  
+    this.authService.currentUser$.subscribe(user => {
+      if (user) {
+        this.progressionService.getForUser(user.id).subscribe(prog => {
+          this.totalFavoris = prog.filter(p => p.favori).length;
+          this.totalExploitees = prog.filter(p => p.exploitee).length;
+        });
+      }
     });
-
+  
     this.userService.getAllUsers().subscribe(users => {
       this.totalUtilisateurs = users.length;
     });

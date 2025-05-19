@@ -4,6 +4,7 @@ import { RessourceService } from '../../service/ressource.service';
 import { Ressource } from '../../models/ressource.model';
 import { RouterModule } from '@angular/router';
 import { FormsModule } from '@angular/forms';
+import { Categorie, CategorieService } from '../../service/categorie.service';
 
 @Component({
   selector: 'app-admin',
@@ -14,15 +15,16 @@ import { FormsModule } from '@angular/forms';
 })
 export class AdminComponent implements OnInit {
   ressources: Ressource[] = [];
+  categories: Categorie[] = [];
 
-  constructor(private ressourceService: RessourceService) {}
+  constructor(private ressourceService: RessourceService, private categorieService: CategorieService) {}
 
   ngOnInit() {
-    this.ressourceService.getAllRessources().subscribe(data => {
+    this.ressourceService.getAll().subscribe(data => {
       this.ressources = data;
     });
   
-    this.ressourceService.getCategories().subscribe(cats => {
+    this.categorieService.getAll().subscribe(cats => {
       this.categories = cats;
     });
   }
@@ -30,7 +32,6 @@ export class AdminComponent implements OnInit {
   showAddModal = false;
 isEditing = false;
 editingRessourceId: number | null = null;
-categories: string[] = [];
 newCategory = '';
 
 newRessource: Partial<Ressource> = {
@@ -103,13 +104,13 @@ deleteRessource(id: number) {
 
 addCategory() {
   if (this.newCategory.trim()) {
-    this.ressourceService.addCategory(this.newCategory.trim());
+    this.categorieService.create(this.newCategory.trim());
     this.newCategory = '';
   }
 }
 
-deleteCategory(category: string) {
-  this.ressourceService.deleteCategory(category);
+deleteCategory(id: number) {
+  this.categorieService.delete(id);
 }
 
 }

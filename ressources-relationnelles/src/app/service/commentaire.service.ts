@@ -1,27 +1,26 @@
 import { Injectable } from '@angular/core';
-import { BehaviorSubject, Observable } from 'rxjs';
+import { HttpClient } from '@angular/common/http';
 import { Commentaire } from '../models/commentaire.model';
+import { environment } from '../../environments/environments';
+import { Observable } from 'rxjs';
 
 @Injectable({
   providedIn: 'root'
 })
 export class CommentaireService {
-  private commentairesSubject = new BehaviorSubject<Commentaire[]>([]);
-  commentaires$ = this.commentairesSubject.asObservable();
+  private api = `${environment.apiUrl}/commentaire`;
 
-  constructor() {}
+  constructor(private http: HttpClient) {}
 
-  getCommentairesParRessource(idRessource: number): Observable<Commentaire[]> {
-    return this.commentaires$;
+  getByRessource(ressourceId: number): Observable<Commentaire[]> {
+    return this.http.get<Commentaire[]>(`${this.api}/ressource/${ressourceId}`);
   }
 
-  addCommentaire(commentaire: Commentaire) {
-    const current = this.commentairesSubject.getValue();
-    this.commentairesSubject.next([...current, commentaire]);
+  create(commentaire: Commentaire): Observable<Commentaire> {
+    return this.http.post<Commentaire>(this.api, commentaire);
   }
 
-  deleteCommentaire(id: number) {
-    const updated = this.commentairesSubject.getValue().filter(c => c.id !== id && c.reponseA !== id);
-    this.commentairesSubject.next(updated);
+  delete(id: number): Observable<void> {
+    return this.http.delete<void>(`${this.api}/${id}`);
   }
 }

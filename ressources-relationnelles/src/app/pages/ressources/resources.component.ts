@@ -21,10 +21,12 @@ export class ResourcesComponent implements OnInit {
   constructor(private ressourceService: RessourceService) {}
 
   ngOnInit() {
-    this.ressourceService.getAllRessources().subscribe(data => {
+    this.ressourceService.getAll().subscribe(data => {
       this.ressources = data;
       this.applyFilters();
     });
+
+    console.log(this.ressources)
   }
 
   applyFilters() {

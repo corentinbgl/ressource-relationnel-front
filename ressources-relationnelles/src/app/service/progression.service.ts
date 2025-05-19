@@ -1,70 +1,27 @@
 import { Injectable } from '@angular/core';
-import { BehaviorSubject } from 'rxjs';
+import { HttpClient } from '@angular/common/http';
+import { environment } from '../../environments/environments';
+import { Observable } from 'rxjs';
 
-interface Progression {
-  favoris: number[];
-  exploitees: number[];
-  misesDeCote: number[];
+export interface ToggleDto {
+  userId: number;
+  ressourceId: number;
+  type: 'favori' | 'exploitee' | 'miseDeCote';
 }
 
 @Injectable({
   providedIn: 'root'
 })
 export class ProgressionService {
-  private progressionSubject = new BehaviorSubject<Progression>({
-    favoris: [],
-    exploitees: [],
-    misesDeCote: []
-  });
+  private api = `${environment.apiUrl}/progression`;
 
-  progression$ = this.progressionSubject.asObservable();
+  constructor(private http: HttpClient) {}
 
-  constructor() {}
-
-  get progression(): Progression {
-    return this.progressionSubject.getValue();
+  getForUser(userId: number): Observable<any[]> {
+    return this.http.get<any[]>(`${this.api}/${userId}`);
   }
 
-  toggleFavori(id: number) {
-    const { favoris } = this.progression;
-    const updated = favoris.includes(id)
-      ? favoris.filter(f => f !== id)
-      : [...favoris, id];
-    this.update({ favoris: updated });
-  }
-
-  toggleExploitee(id: number) {
-    const { exploitees } = this.progression;
-    const updated = exploitees.includes(id)
-      ? exploitees.filter(f => f !== id)
-      : [...exploitees, id];
-    this.update({ exploitees: updated });
-  }
-
-  toggleMiseDeCote(id: number) {
-    const { misesDeCote } = this.progression;
-    const updated = misesDeCote.includes(id)
-      ? misesDeCote.filter(f => f !== id)
-      : [...misesDeCote, id];
-    this.update({ misesDeCote: updated });
-  }
-
-  private update(changes: Partial<Progression>) {
-    this.progressionSubject.next({
-      ...this.progression,
-      ...changes
-    });
-  }
-
-  isFavori(id: number): boolean {
-    return this.progression.favoris.includes(id);
-  }
-
-  isExploitee(id: number): boolean {
-    return this.progression.exploitees.includes(id);
-  }
-
-  isMiseDeCote(id: number): boolean {
-    return this.progression.misesDeCote.includes(id);
+  toggle(dto: ToggleDto): Observable<void> {
+    return this.http.post<void>(`${this.api}/toggle`, dto);
   }
 }

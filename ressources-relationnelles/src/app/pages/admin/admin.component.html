@@ -59,7 +59,7 @@
     @for(category of categories ; track $index){
       <div *ngFor="let category of categories" class="bg-white p-4 rounded shadow flex justify-between items-center">
         <span>{{ category }}</span>
-        <button (click)="deleteCategory(category)" class="bg-red-500 text-white px-3 py-1 rounded hover:bg-red-600">
+        <button (click)="deleteCategory(category.id)" class="bg-red-500 text-white px-3 py-1 rounded hover:bg-red-600">
           Supprimer
         </button>
       </div>

@@ -38,11 +38,11 @@ export class ResourceDetailsComponent implements OnInit {
   ngOnInit() {
     const id = Number(this.route.snapshot.paramMap.get('id'));
 
-    this.ressourceService.getAllRessources().subscribe(data => {
+    this.ressourceService.getAll().subscribe(data => {
       this.ressource = data.find(r => r.id === id);
     });
 
-    this.commentaireService.commentaires$.subscribe(coms => {
+    this.commentaireService.getByRessource(id).subscribe(coms => {
       const commentairesDeLaRessource = coms.filter(c => c.ressourceId === id);
 
       this.commentairesPrincipaux = commentairesDeLaRessource.filter(c => !c.reponseA);
@@ -70,7 +70,7 @@ export class ResourceDetailsComponent implements OnInit {
         contenu: this.newComment,
         date: new Date()
       };
-      this.commentaireService.addCommentaire(newCom);
+      this.commentaireService.create(newCom);
       this.newComment = '';
     }
   }
@@ -94,39 +94,39 @@ export class ResourceDetailsComponent implements OnInit {
         date: new Date(),
         reponseA: this.replyingToId
       };
-      this.commentaireService.addCommentaire(newReply);
+      this.commentaireService.create(newReply);
       this.replyContent = '';
       this.replyingToId = null;
     }
   }
 
   deleteCommentaire(id: number) {
-    this.commentaireService.deleteCommentaire(id);
+    this.commentaireService.delete(id);
   }
 
-  get isFavori(): boolean {
-    return this.ressource ? this.progressionService.isFavori(this.ressource.id) : false;
-  }
+  // get isFavori(): boolean {
+  //   return this.ressource ? this.progressionService.isFavori(this.ressource.id) : false;
+  // }
   
-  get isExploitee(): boolean {
-    return this.ressource ? this.progressionService.isExploitee(this.ressource.id) : false;
-  }
+  // get isExploitee(): boolean {
+  //   return this.ressource ? this.progressionService.isExploitee(this.ressource.id) : false;
+  // }
   
-  get isMiseDeCote(): boolean {
-    return this.ressource ? this.progressionService.isMiseDeCote(this.ressource.id) : false;
-  }
+  // get isMiseDeCote(): boolean {
+  //   return this.ressource ? this.progressionService.isMiseDeCote(this.ressource.id) : false;
+  // }
 
   
-  toggleFavori() {
-    if (this.ressource) this.progressionService.toggleFavori(this.ressource.id);
-  }
+  // toggleFavori() {
+  //   if (this.ressource) this.progressionService.toggleFavori(this.ressource.id);
+  // }
   
-  toggleExploitee() {
-    if (this.ressource) this.progressionService.toggleExploitee(this.ressource.id);
-  }
+  // toggleExploitee() {
+  //   if (this.ressource) this.progressionService.toggleExploitee(this.ressource.id);
+  // }
   
-  toggleMiseDeCote() {
-    if (this.ressource) this.progressionService.toggleMiseDeCote(this.ressource.id);
-  }
+  // toggleMiseDeCote() {
+  //   if (this.ressource) this.progressionService.toggleMiseDeCote(this.ressource.id);
+  // }
   
 }
