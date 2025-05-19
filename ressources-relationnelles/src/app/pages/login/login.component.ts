@@ -19,11 +19,16 @@ export class LoginComponent {
   constructor(private authService: AuthService, private router: Router) {}
 
   login() {
-    const success = this.authService.login(this.email, this.password);
-    if (success) {
-      this.router.navigate(['/']);
-    } else {
-      this.errorMessage = "Email ou mot de passe incorrect.";
-    }
+    this.authService.login(this.email, this.password).subscribe({
+      next: (response) => {
+        // Exemple : stocker le token JWT reçu
+        localStorage.setItem('token', response.token);
+        // Rediriger vers la page d'accueil ou autre
+        this.router.navigate(['/']);
+      },
+      error: (err) => {
+        this.errorMessage = "Email ou mot de passe incorrect.";
+      }
+    });
   }
 }
