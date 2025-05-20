@@ -41,24 +41,24 @@
   <h2 class="text-2xl font-bold mb-4 text-center text-blue-600">Gestion des catégories</h2>
 
   <div class="flex gap-4 mb-4">
-    <select [(ngModel)]="newRessource.categorie" name="categorie" required class="w-full p-2 border rounded">
-      <option value="" disabled selected hidden>Choisir une catégorie</option>
-      @for(category of categories ; track $index){
-        <option [value]="category">
-          {{ category }}
-        </option>
-      }
-      
-    </select>
-        <button (click)="addCategory()" class="bg-green-500 text-white px-4 py-2 rounded hover:bg-green-600">
+    <input
+      type="text"
+      [(ngModel)]="newCategory"
+      placeholder="Nouvelle catégorie"
+      class="flex-grow p-2 border rounded"
+    />
+    <button
+      (click)="addCategory()"
+      class="bg-green-500 text-white px-4 py-2 rounded hover:bg-green-600"
+    >
       Ajouter
     </button>
   </div>
 
   <div class="grid grid-cols-2 md:grid-cols-3 gap-4">
     @for(category of categories ; track $index){
-      <div *ngFor="let category of categories" class="bg-white p-4 rounded shadow flex justify-between items-center">
-        <span>{{ category }}</span>
+      <div class="bg-white p-4 rounded shadow flex justify-between items-center">
+        <span>{{ category.nom }}</span>
         <button (click)="deleteCategory(category.id)" class="bg-red-500 text-white px-3 py-1 rounded hover:bg-red-600">
           Supprimer
         </button>

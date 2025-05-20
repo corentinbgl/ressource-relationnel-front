@@ -5,6 +5,7 @@ import { Ressource } from '../../models/ressource.model';
 import { RouterModule } from '@angular/router';
 import { FormsModule } from '@angular/forms';
 import { Categorie, CategorieService } from '../../service/categorie.service';
+import { AuthResponse, AuthService } from '../../service/auth.service';
 
 @Component({
   selector: 'app-admin',
@@ -17,7 +18,7 @@ export class AdminComponent implements OnInit {
   ressources: Ressource[] = [];
   categories: Categorie[] = [];
 
-  constructor(private ressourceService: RessourceService, private categorieService: CategorieService) {}
+  constructor(private ressourceService: RessourceService, private categorieService: CategorieService, private authService : AuthService) {}
 
   ngOnInit() {
     this.ressourceService.getAll().subscribe(data => {
@@ -27,6 +28,8 @@ export class AdminComponent implements OnInit {
     this.categorieService.getAll().subscribe(cats => {
       this.categories = cats;
     });
+
+    console.log(this.categories)
   }
 
   showAddModal = false;
@@ -44,36 +47,39 @@ newRessource: Partial<Ressource> = {
 
 addOrUpdateRessource() {
   if (this.newRessource.titre && this.newRessource.description && this.newRessource.categorie) {
+    const ressourceToSend: Ressource = {
+      id: this.editingRessourceId ?? 0, // ⚠️ l’id ne sera pas utilisé en POST
+      titre: this.newRessource.titre!,
+      description: this.newRessource.description!,
+      categorie: this.newRessource.categorie!,
+      type: this.newRessource.type!,
+      dateCreation: new Date()
+    };
+
     if (this.isEditing && this.editingRessourceId !== null) {
-      const index = this.ressources.findIndex(r => r.id === this.editingRessourceId);
-      if (index !== -1) {
-        this.ressources[index] = {
-          ...this.ressources[index],
-          titre: this.newRessource.titre!,
-          description: this.newRessource.description!,
-          categorie: this.newRessource.categorie!,
-          type: this.newRessource.type!,
-          dateCreation: this.ressources[index].dateCreation 
-        };
-      }
+      // 🟡 MODIFICATION
+      this.ressourceService.update(ressourceToSend).subscribe(() => {
+        const index = this.ressources.findIndex(r => r.id === this.editingRessourceId);
+        if (index !== -1) {
+          this.ressources[index] = { ...ressourceToSend };
+        }
+        this.closeModalAndReset();
+      });
     } else {
-      const newId = Math.max(...this.ressources.map(r => r.id)) + 1;
-      const newRessourceFinal: Ressource = {
-        id: newId,
-        titre: this.newRessource.titre!,
-        description: this.newRessource.description!,
-        categorie: this.newRessource.categorie!,
-        type: this.newRessource.type!,
-        dateCreation: new Date()
-      };
-
-      this.ressources.push(newRessourceFinal);
+      // 🟢 AJOUT
+      this.ressourceService.create(ressourceToSend).subscribe((created) => {
+        this.ressources.push(created);
+        this.closeModalAndReset();
+      });
     }
-
-    this.showAddModal = false;
-    this.resetForm();
   }
 }
+
+closeModalAndReset() {
+  this.showAddModal = false;
+  this.resetForm();
+}
+
 
 editRessource(ressource: Ressource) {
   this.showAddModal = true;
@@ -98,19 +104,32 @@ resetForm() {
 deleteRessource(id: number) {
   const confirmation = confirm('Es-tu sûr de vouloir supprimer cette ressource ?');
   if (confirmation) {
-    this.ressources = this.ressources.filter(r => r.id !== id);
+    this.ressourceService.delete(id).subscribe(() => {
+      this.ressources = this.ressources.filter(r => r.id !== id);
+    });
   }
 }
 
+
 addCategory() {
   if (this.newCategory.trim()) {
-    this.categorieService.create(this.newCategory.trim());
-    this.newCategory = '';
+    this.categorieService.create(this.newCategory.trim()).subscribe(() => {
+      this.categorieService.getAll().subscribe(cats => {
+        this.categories = cats; // ✅ remplace proprement
+      });
+      this.newCategory = '';
+    });
   }
 }
 
 deleteCategory(id: number) {
-  this.categorieService.delete(id);
+  const confirmation = confirm('Supprimer cette catégorie ?');
+  if (confirmation) {
+    this.categorieService.delete(id).subscribe(() => {
+      this.categories = this.categories.filter(c => c.id !== id); // ✅ mise à jour locale
+    });
+  }
 }
+
 
 }
