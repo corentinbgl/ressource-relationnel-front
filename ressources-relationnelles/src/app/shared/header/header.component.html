@@ -10,7 +10,11 @@
        @if(user.role === 'administrateur' || user.role === 'super-administrateur'){
         <ng-container>
           <a routerLink="/admin" class="text-white hover:underline">Gestion Ressources</a>
+          <a routerLink="/admin-users" class="text-white hover:text-blue-200">Utilisateurs</a>
+          <a routerLink="/progressions" class="text-white hover:text-blue-200">Progression</a>
+          <a routerLink="/admin-dashboard" class="text-white hover:text-blue-200">Tableau de bord</a>
         </ng-container>
+        
        }
 
        @if(user.role === 'super-administrateur'){

@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
-import { BehaviorSubject, tap } from 'rxjs';
+import { BehaviorSubject, Observable, tap } from 'rxjs';
 import { Router } from '@angular/router';
 import { environment } from '../../environments/environments';
 
@@ -54,6 +54,10 @@ export class AuthService {
 
   getUserRole(): string | null {
     return this.currentUserSubject.value?.role || null;
+  }
+
+  getAllRoles(): Observable<string[]> {
+    return this.http.get<string[]>(`${environment.apiUrl}/role`);
   }
 
   getUserEmail(): string | null {

@@ -1,6 +1,8 @@
 import { Injectable } from '@angular/core';
 import { BehaviorSubject, Observable } from 'rxjs';
 import { User } from '../models/user.model';
+import { environment } from '../../environments/environments';
+import { HttpClient } from '@angular/common/http';
 
 @Injectable({
   providedIn: 'root'
@@ -26,15 +28,16 @@ export class UserService {
 
   users$ = this.usersSubject.asObservable();
 
-  constructor() {}
+  private api = `${environment.apiUrl}/user`; // ⚠️ backend doit être sur /api/user
+
+  constructor(private http: HttpClient) {}
 
   getAllUsers(): Observable<User[]> {
     return this.users$;
   }
 
-  addUser(user: User) {
-    const currentUsers = this.usersSubject.getValue();
-    this.usersSubject.next([...currentUsers, user]);
+  addUser(user: User): Observable<User> {
+    return this.http.post<User>(this.api, user);
   }
 
   toggleActive(id: number) {

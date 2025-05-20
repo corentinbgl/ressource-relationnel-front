@@ -78,8 +78,12 @@
           <form (ngSubmit)="addOrUpdateRessource()" #addForm="ngForm" class="space-y-4">
             <input [(ngModel)]="newRessource.titre" name="titre" type="text" placeholder="Titre" required class="w-full p-2 border rounded" />
             <textarea [(ngModel)]="newRessource.description" name="description" placeholder="Description" required class="w-full p-2 border rounded"></textarea>
-            <input [(ngModel)]="newRessource.categorie" name="categorie" type="text" placeholder="Catégorie" required class="w-full p-2 border rounded" />
-
+            <select [(ngModel)]="newRessource.categorie" name="categorie" required class="w-full p-2 border rounded">
+              <option value="" disabled hidden>Choisir une catégorie</option>
+              @for (category of categories; track $index) {
+                <option [value]="category.nom">{{ category.nom }}</option>
+              }
+            </select>
             <select [(ngModel)]="newRessource.type" name="type" class="w-full p-2 border rounded">
               <option value="publique">Publique</option>
               <option value="restreinte">Restreinte</option>

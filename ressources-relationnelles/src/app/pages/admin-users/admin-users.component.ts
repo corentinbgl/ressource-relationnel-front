@@ -3,6 +3,7 @@ import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { UserService } from '../../service/user.service';
 import { User, Role } from '../../models/user.model';
+import { AuthService } from '../../service/auth.service';
 
 @Component({
   selector: 'app-admin-users',
@@ -20,13 +21,17 @@ export class AdminUsersComponent implements OnInit {
     actif: true
   };
 
-  constructor(private userService: UserService) {}
+  constructor(private userService: UserService, private authService: AuthService) {}
 
-  ngOnInit() {
-    this.userService.getAllUsers().subscribe(users => {
-      this.users = users;
-    });
-  }
+  roles: string[] = [];
+  selectedRole: string = ''; 
+
+ngOnInit() {
+  this.authService.getAllRoles().subscribe((roles) => {
+    this.roles = roles;
+    console.log(roles)
+  });
+}
 
   addUser() {
     if (this.newUser.email && this.newUser.password && this.newUser.role) {
@@ -35,9 +40,10 @@ export class AdminUsersComponent implements OnInit {
         id: newId,
         email: this.newUser.email,
         password: this.newUser.password,
-        role: this.newUser.role as Role,
+        role: this.selectedRole as Role,
         actif: true
       };
+      console.log(user)
       this.userService.addUser(user);
       this.newUser = { email: '', password: '', role: 'citoyen', actif: true };
     }
