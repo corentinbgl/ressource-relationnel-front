@@ -5,10 +5,12 @@
       <input [(ngModel)]="newUser.email" placeholder="Email" class="p-2 border rounded flex-1">
       <input [(ngModel)]="newUser.password" placeholder="Mot de passe" type="password" class="p-2 border rounded flex-1">
       <select [(ngModel)]="selectedRole" class="p-2 border rounded w-full">
-        <option *ngFor="let role of roles" [value]="role">
-          {{ role | titlecase }}
+        <option *ngFor="let role of roles" [value]="role.id">
+          {{ role.role }}
         </option>
       </select>
+      
+      
       <button (click)="addUser()" class="bg-green-500 text-white px-4 py-2 rounded hover:bg-green-600">
         Ajouter
       </button>
@@ -27,7 +29,7 @@
         @for(user of users ; track $index){
             <tr class="border-b">
                 <td class="p-3">{{ user.email }}</td>
-                <td class="p-3 capitalize">{{ user.role }}</td>
+                <td>{{ getRoleLabel(user.role) | titlecase }}</td>
                 <td class="p-3">{{ user.actif ? 'Actif' : 'Désactivé' }}</td>
                 <td class="p-3">
                   <button (click)="toggleActive(user.id)" class="bg-yellow-400 text-white px-3 py-1 rounded hover:bg-yellow-500">

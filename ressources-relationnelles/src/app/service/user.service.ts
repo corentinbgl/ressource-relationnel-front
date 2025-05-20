@@ -14,26 +14,26 @@ export class UserService {
       id: 1,
       email: 'citoyen1@example.com',
       password: 'password123',
-      role: 'citoyen',
+      role: 1,
       actif: true
     },
     {
       id: 2,
       email: 'admin@example.com',
       password: 'adminpass',
-      role: 'administrateur',
+      role: 3,
       actif: true
     }
   ]);
 
   users$ = this.usersSubject.asObservable();
 
-  private api = `${environment.apiUrl}/user`; // ⚠️ backend doit être sur /api/user
+  private api = `${environment.apiUrl}/users`; // ⚠️ backend doit être sur /api/user
 
   constructor(private http: HttpClient) {}
 
   getAllUsers(): Observable<User[]> {
-    return this.users$;
+    return this.http.get<User[]>(this.api);
   }
 
   addUser(user: User): Observable<User> {

@@ -56,9 +56,10 @@ export class AuthService {
     return this.currentUserSubject.value?.role || null;
   }
 
-  getAllRoles(): Observable<string[]> {
-    return this.http.get<string[]>(`${environment.apiUrl}/role`);
+  getAllRoles(): Observable<{ id: number, role: string }[]> {
+    return this.http.get<{ id: number, role: string }[]>(`${environment.apiUrl}/role`);
   }
+  
 
   getUserEmail(): string | null {
     return this.currentUserSubject.value?.email || null;

@@ -1,9 +1,7 @@
-export type Role = 'citoyen' | 'modérateur' | 'administrateur' | 'super-administrateur';
-
 export interface User {
   id: number;
   email: string;
   password: string;
-  role: Role;
+  role: number; // ✅ un ID de rôle
   actif: boolean;
 }

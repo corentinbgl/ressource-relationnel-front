@@ -2,7 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { UserService } from '../../service/user.service';
-import { User, Role } from '../../models/user.model';
+import { User } from '../../models/user.model';
 import { AuthService } from '../../service/auth.service';
 
 @Component({
@@ -17,20 +17,43 @@ export class AdminUsersComponent implements OnInit {
   newUser: Partial<User> = {
     email: '',
     password: '',
-    role: 'citoyen',
+    role: 1,
     actif: true
   };
 
   constructor(private userService: UserService, private authService: AuthService) {}
 
-  roles: string[] = [];
-  selectedRole: string = ''; 
+  roles: { id: number, role: string }[] = [];
+  selectedRole: number = 1; 
+
+  roleLabels: { [key: string]: string } = {
+    '1': 'Citoyen',
+    '2': 'Modérateur',
+    '3': 'Administrateur',
+    '4': 'Super Administrateur'
+  };
+ 
 
 ngOnInit() {
   this.authService.getAllRoles().subscribe((roles) => {
     this.roles = roles;
     console.log(roles)
+
+    console.log(this.getRoleLabel(3))
   });
+
+  
+  this.userService.getAllUsers().subscribe(users => {
+    this.users = users;
+    console.log(users)
+  });
+
+  
+}
+
+getRoleLabel(roleId: number): string {
+  console.log(this.roleLabels)
+  return this.roleLabels[roleId.toString()] || 'Inconnu';
 }
 
   addUser() {
@@ -40,12 +63,12 @@ ngOnInit() {
         id: newId,
         email: this.newUser.email,
         password: this.newUser.password,
-        role: this.selectedRole as Role,
+        role: this.selectedRole ,
         actif: true
       };
       console.log(user)
       this.userService.addUser(user);
-      this.newUser = { email: '', password: '', role: 'citoyen', actif: true };
+      this.newUser = { email: '', password: '', role: 1, actif: true };
     }
   }
 
