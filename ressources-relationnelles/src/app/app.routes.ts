@@ -10,6 +10,7 @@ import { AdminDashboardComponent } from './pages/admin-dashboard.component';
 import { AideComponent } from './pages/aide/aide.component';
 import { CreateRessourceComponent } from './pages/create-ressource.component';
 import { ModerateRessourcesComponent } from './pages/moderate-ressources.component';
+import { SignupComponent } from './pages/signup/signup.component';
 
 export const routes: Routes = [
     { path: '', component: HomeComponent },
@@ -21,6 +22,7 @@ export const routes: Routes = [
     { path: 'progression', component: ProgressionComponent },
     { path: 'admin-dashboard', component: AdminDashboardComponent },
     { path: 'aide', component: AideComponent},
+    { path: 'signup', component: SignupComponent},
     {
       path: 'ressource-create',
       component: CreateRessourceComponent
