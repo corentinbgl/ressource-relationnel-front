@@ -33,6 +33,19 @@ export class AuthService {
     return userId ? parseInt(userId, 10) : null;
   }
 
+  getConnectedUser(): Observable<any> | null {
+    const id = this.currentUserSubject.value?.id;
+    if (!id) return null;
+  
+    return this.http.get<any>(`${environment.apiUrl}/users/${id}`);
+  }
+
+  getRoleById(id: number): Observable<{ id: number; role: string }> {
+    return this.http.get<{ id: number; role: string }>(`${environment.apiUrl}/Role/${id}`);
+  }
+  
+  
+
   login(email: string, password: string) {
     return this.http.post<AuthResponse>(`${environment.apiUrl}/Auth/login`, { email, password }).pipe(
       tap(res => {

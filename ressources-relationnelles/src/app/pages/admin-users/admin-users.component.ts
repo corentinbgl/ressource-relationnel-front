@@ -37,22 +37,18 @@ export class AdminUsersComponent implements OnInit {
 ngOnInit() {
   this.authService.getAllRoles().subscribe((roles) => {
     this.roles = roles;
-    console.log(roles)
 
-    console.log(this.getRoleLabel(3))
   });
 
   
   this.userService.getAllUsers().subscribe(users => {
     this.users = users;
-    console.log(users)
   });
 
   
 }
 
 getRoleLabel(roleId: number): string {
-  console.log(this.roleLabels)
   return this.roleLabels[roleId.toString()] || 'Inconnu';
 }
 

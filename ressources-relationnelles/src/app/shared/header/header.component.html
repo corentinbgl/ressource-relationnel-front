@@ -10,11 +10,7 @@
        @if(user.role === 'administrateur' || user.role === 'super-administrateur'){
         <ng-container>
           <a routerLink="/admin" class="text-white hover:underline">Gestion Ressources</a>
-          <a routerLink="/admin-users" class="text-white hover:text-blue-200">Utilisateurs</a>
-          <a routerLink="/progressions" class="text-white hover:text-blue-200">Progression</a>
-          <a routerLink="/admin-dashboard" class="text-white hover:text-blue-200">Tableau de bord</a>
         </ng-container>
-        
        }
 
        @if(user.role === 'super-administrateur'){
@@ -22,10 +18,6 @@
           <a routerLink="/admin-users" class="text-white hover:underline">Gestion Comptes</a>
         </ng-container>
        }
-       <ng-container *ngIf="user.role === 'administrateur' || user.role === 'super-administrateur'">
-        <a routerLink="/admin-dashboard" class="text-white hover:underline">Tableau de bord admin</a>
-      </ng-container>
-      
       <span class="text-white ml-4">Bonjour, {{ user.role | titlecase }}</span>
       <button (click)="logout()" class="text-white hover:underline ml-2">Déconnexion</button>
     </ng-container>
