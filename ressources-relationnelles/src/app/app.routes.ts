@@ -7,6 +7,7 @@ import { AdminComponent } from './pages/admin/admin.component';
 import { AdminUsersComponent } from './pages/admin-users/admin-users.component';
 import { ProgressionComponent } from './pages/progression.component';
 import { AdminDashboardComponent } from './pages/admin-dashboard.component';
+import { AideComponent } from './pages/aide/aide.component';
 
 export const routes: Routes = [
     { path: '', component: HomeComponent },
@@ -16,7 +17,8 @@ export const routes: Routes = [
     { path: 'admin', component: AdminComponent },
     { path: 'admin-users', component: AdminUsersComponent },
     { path: 'progression', component: ProgressionComponent },
-    { path: 'admin-dashboard', component: AdminDashboardComponent }
+    { path: 'admin-dashboard', component: AdminDashboardComponent },
+    { path: 'aide', component: AideComponent}
 
   ];
   

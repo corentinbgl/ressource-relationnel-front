@@ -5,5 +5,6 @@ export interface Ressource {
     type: 'publique' | 'restreinte';
     categorie: string;
     dateCreation: Date;
+    userID : number
   }
   
