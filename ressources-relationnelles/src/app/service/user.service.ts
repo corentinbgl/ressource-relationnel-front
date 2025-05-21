@@ -28,7 +28,7 @@ export class UserService {
 
   users$ = this.usersSubject.asObservable();
 
-  private api = `${environment.apiUrl}/users`; // ⚠️ backend doit être sur /api/user
+  private api = `${environment.apiUrl}/users`; 
 
   constructor(private http: HttpClient) {}
 
@@ -37,7 +37,8 @@ export class UserService {
   }
 
   addUser(user: User): Observable<User> {
-    return this.http.post<User>(this.api, user);
+    console.log(user)
+    return this.http.post<User>('http://localhost:5086/add', user);
   }
 
   toggleActive(id: number) {
