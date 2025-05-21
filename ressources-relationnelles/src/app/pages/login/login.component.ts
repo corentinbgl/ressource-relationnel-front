@@ -18,17 +18,25 @@ export class LoginComponent {
 
   constructor(private authService: AuthService, private router: Router) {}
 
-  login() {
-    this.authService.login(this.email, this.password).subscribe({
-      next: (response) => {
-        // Exemple : stocker le token JWT reçu
-        localStorage.setItem('token', response.token);
-        // Rediriger vers la page d'accueil ou autre
-        this.router.navigate(['/']);
-      },
-      error: (err) => {
+login() {
+  this.authService.login(this.email, this.password).subscribe({
+    next: (response) => {
+      localStorage.setItem('token', response.token);
+      this.router.navigate(['/']);
+    },
+    error: (err) => {
+      // Vérifie si l'erreur a un message spécifique depuis le backend
+      if (err.error && typeof err.error === 'string') {
+        this.errorMessage = err.error; // message côté backend, ex: "Compte désactivé, contactez un administrateur."
+      } else if (err.status === 401) {
         this.errorMessage = "Email ou mot de passe incorrect.";
+      } else if (err.status === 403) {
+        this.errorMessage = "Compte désactivé, contactez un administrateur.";
+      } else {
+        this.errorMessage = "Une erreur est survenue, veuillez réessayer.";
       }
-    });
-  }
+    }
+  });
+}
+
 }

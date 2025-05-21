@@ -35,18 +35,20 @@ export class AdminUsersComponent implements OnInit {
  
 
 ngOnInit() {
+  // Charge les rôles
   this.authService.getAllRoles().subscribe((roles) => {
     this.roles = roles;
-
   });
 
-  
-  this.userService.getAllUsers().subscribe(users => {
+  // Charge la liste des utilisateurs depuis le backend
+  this.userService.loadUsers();
+
+  // Abonnement à la liste des utilisateurs mise à jour
+  this.userService.users$.subscribe(users => {
     this.users = users;
   });
-
-  
 }
+
 
 getRoleLabel(roleId: number): string {
   return this.roleLabels[roleId.toString()] || 'Inconnu';
@@ -82,7 +84,20 @@ addUser() {
 }
 
 
-  toggleActive(id: number) {
-    this.userService.toggleActive(id);
-  }
+toggleActive(id: number) {
+  this.userService.toggleActive(id).subscribe({
+    next: () => {
+      console.log('Mise à jour réussie et usersSubject mis à jour');
+      // Pas besoin de faire autre chose, car usersSubject est mis à jour dans le service
+    },
+    error: (err) => {
+      console.error('Erreur lors de la mise à jour:', err);
+    }
+  });
+}
+
+trackByUserId(index: number, user: User): number {
+  return user.id;
+}
+
 }
