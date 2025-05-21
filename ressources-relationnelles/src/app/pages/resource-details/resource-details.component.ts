@@ -19,6 +19,8 @@ import { ProgressionService } from '../../service/progression.service';
 export class ResourceDetailsComponent implements OnInit {
   ressource?: Ressource;
 
+  
+
   commentairesPrincipaux: Commentaire[] = []; // ➔ seulement les commentaires sans réponse
   reponsesParCommentaire: { [parentId: number]: Commentaire[] } = {}; // ➔ réponses par commentaire
 
@@ -26,6 +28,11 @@ export class ResourceDetailsComponent implements OnInit {
   replyContent: string = '';
   replyingToId: number | null = null;
   userEmail: string | null = null;
+
+  isFavori: boolean = false;
+isExploitee: boolean = false;
+isMiseDeCote: boolean = false;
+
 
   constructor(
     private route: ActivatedRoute,
@@ -78,6 +85,7 @@ export class ResourceDetailsComponent implements OnInit {
   startReply(commentId: number) {
     this.replyingToId = commentId;
   }
+  
 
   cancelReply() {
     this.replyingToId = null;
@@ -104,29 +112,16 @@ export class ResourceDetailsComponent implements OnInit {
     this.commentaireService.delete(id);
   }
 
-  // get isFavori(): boolean {
-  //   return this.ressource ? this.progressionService.isFavori(this.ressource.id) : false;
-  // }
+  toggleFavori() {
+    this.isFavori = !this.isFavori;
+  }
   
-  // get isExploitee(): boolean {
-  //   return this.ressource ? this.progressionService.isExploitee(this.ressource.id) : false;
-  // }
+  toggleExploitee() {
+    this.isExploitee = !this.isExploitee;
+  }
   
-  // get isMiseDeCote(): boolean {
-  //   return this.ressource ? this.progressionService.isMiseDeCote(this.ressource.id) : false;
-  // }
-
-  
-  // toggleFavori() {
-  //   if (this.ressource) this.progressionService.toggleFavori(this.ressource.id);
-  // }
-  
-  // toggleExploitee() {
-  //   if (this.ressource) this.progressionService.toggleExploitee(this.ressource.id);
-  // }
-  
-  // toggleMiseDeCote() {
-  //   if (this.ressource) this.progressionService.toggleMiseDeCote(this.ressource.id);
-  // }
+  toggleMiseDeCote() {
+    this.isMiseDeCote = !this.isMiseDeCote;
+  }
   
 }
