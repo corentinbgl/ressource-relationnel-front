@@ -28,7 +28,7 @@ export class UserService {
 
   users$ = this.usersSubject.asObservable();
 
-  private api = `${environment.apiUrl}/users`; 
+  private api = `${environment.apiUrl}/user`; 
 
   constructor(private http: HttpClient) {}
 
@@ -38,7 +38,7 @@ export class UserService {
 
   addUser(user: User): Observable<User> {
     console.log(user)
-    return this.http.post<User>('http://localhost:5086/add', user);
+    return this.http.post<User>('http://localhost:5086/api/user', user);
   }
 
   toggleActive(id: number) {

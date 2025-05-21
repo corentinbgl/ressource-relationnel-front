@@ -1,23 +1,37 @@
 import { Component } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { Router, RouterModule } from '@angular/router';
+import { RouterModule, Router } from '@angular/router';
+import { MatSnackBar, MatSnackBarModule } from '@angular/material/snack-bar';
+import { MatIconModule } from '@angular/material/icon';
 import { AuthService } from '../../service/auth.service';
 
 @Component({
   selector: 'app-header',
   standalone: true,
-  imports: [CommonModule, RouterModule],
+  imports: [CommonModule, RouterModule, MatSnackBarModule],
   templateUrl: './header.component.html',
   styleUrls: ['./header.component.scss']
 })
 export class HeaderComponent {
-  constructor(private authService: AuthService, private router: Router) {}
-
   user$ = this.authService.currentUser$;
 
+  constructor(
+    private authService: AuthService,
+    private router: Router,
+    private snackBar: MatSnackBar
+  ) {}
+
   logout() {
-    this.authService.logout();
-    this.router.navigate(['/']);
+    this.snackBar.open('👋 À bientôt ! Déconnexion en cours...', '', {
+    duration: 1500,
+    panelClass: ['snackbar-logout']
+});
+
+
+    setTimeout(() => {
+      this.authService.logout();
+      this.router.navigate(['/']);
+    }, 1500);
   }
   
 

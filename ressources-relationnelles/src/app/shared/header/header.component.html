@@ -7,22 +7,31 @@
     <a routerLink="/resources" class="text-white hover:underline">Ressources</a>
 
     <ng-container *ngIf="user$ | async as user; else notLogged">
-       @if(user.role === 'administrateur' || user.role === 'super-administrateur'){
+      @if(user.role === 'administrateur' || user.role === 'super-administrateur'){
         <ng-container>
           <a routerLink="/admin" class="text-white hover:underline">Gestion Ressources</a>
         </ng-container>
-       }
+      }
 
-       @if(user.role === 'super-administrateur'){
+      @if(user.role === 'super-administrateur'){
         <ng-container>
           <a routerLink="/admin-users" class="text-white hover:underline">Gestion Comptes</a>
         </ng-container>
-       }
+      }
+
+      <ng-container *ngIf="user.role === 'administrateur' || user.role === 'super-administrateur'">
+        <a routerLink="/admin-dashboard" class="text-white hover:underline">Tableau de bord admin</a>
+      </ng-container>
+
+      <!-- ✅ Lien vers l'aide visible pour tous -->
+      <a routerLink="/aide" class="text-white hover:underline">Aide</a>
+
       <span class="text-white ml-4">Bonjour, {{ user.role | titlecase }}</span>
       <button (click)="logout()" class="text-white hover:underline ml-2">Déconnexion</button>
     </ng-container>
 
     <ng-template #notLogged>
+      <a routerLink="/aide" class="text-white hover:underline">Aide</a>
       <a routerLink="/login" class="text-white hover:underline">Connexion</a>
     </ng-template>
   </div>

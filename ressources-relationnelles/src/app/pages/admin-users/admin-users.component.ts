@@ -52,21 +52,35 @@ getRoleLabel(roleId: number): string {
   return this.roleLabels[roleId.toString()] || 'Inconnu';
 }
 
-  addUser() {
-    if (this.newUser.email && this.newUser.password && this.newUser.role) {
-      const newId = Math.max(...this.users.map(u => u.id)) + 1;
-      const user: User = {
-        id: newId,
-        email: this.newUser.email,
-        password: this.newUser.password,
-        role: this.selectedRole ,
-        actif: true
-      };
-      console.log(user)
-      this.userService.addUser(user);
-      this.newUser = { email: '', password: '', role: 1, actif: true };
-    }
+addUser() {
+  if (this.newUser.email && this.newUser.password && this.newUser.role) {
+    const newId = this.users.length > 0 ? Math.max(...this.users.map(u => u.id)) + 1 : 1;
+    const user: User = {
+      id: newId,
+      email: this.newUser.email,
+      password: this.newUser.password,
+      role: this.selectedRole,
+      actif: true
+    };
+    console.log('Utilisateur à ajouter', user);
+
+    this.userService.addUser(user).subscribe({
+      next: (createdUser) => {
+        console.log('Utilisateur créé avec succès', createdUser);
+        // Optionnel: rafraîchir la liste des users après ajout
+        this.users.push(createdUser);
+        this.newUser = { email: '', password: '', role: 1, actif: true };
+        this.selectedRole = 1;
+      },
+      error: (err) => {
+        console.error('Erreur lors de la création', err);
+      }
+    });
+  } else {
+    console.warn('Formulaire incomplet');
   }
+}
+
 
   toggleActive(id: number) {
     this.userService.toggleActive(id);
