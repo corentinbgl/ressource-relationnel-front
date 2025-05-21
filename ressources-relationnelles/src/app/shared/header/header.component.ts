@@ -16,7 +16,7 @@ export class HeaderComponent {
   user$ = this.authService.currentUser$;
 
   constructor(
-    private authService: AuthService,
+    public authService: AuthService,
     private router: Router,
     private snackBar: MatSnackBar
   ) {}
@@ -33,7 +33,4 @@ export class HeaderComponent {
       this.router.navigate(['/']);
     }, 1500);
   }
-  
-
-
 }

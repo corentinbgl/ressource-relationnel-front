@@ -13,7 +13,8 @@ export class RessourceService {
   constructor(private http: HttpClient) {}
 
   getAll(): Observable<Ressource[]> {
-    return this.http.get<Ressource[]>(this.api, { responseType: 'json' as const });
+    return this.http.get<Ressource[]>((`${this.api}`));
+    //return this.http.get<Ressource[]>(this.api, { responseType: 'json' as const });
   }
 
   getById(id: number): Observable<Ressource> {

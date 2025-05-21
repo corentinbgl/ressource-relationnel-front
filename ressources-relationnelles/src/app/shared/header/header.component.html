@@ -2,35 +2,42 @@
   <div class="text-white font-bold text-lg">
     (RE)Sources Relationnelles
   </div>
+
+   <!-- Ici tu veux afficher le rôle au milieu -->
+<div class="text-white font-semibold">
+  <span>{{ authService.getUserRoleName() || 'Non connecté' }}</span>
+</div>
   <div class="space-x-4 flex items-center">
     <a routerLink="/" class="text-white hover:underline">Accueil</a>
     <a routerLink="/resources" class="text-white hover:underline">Ressources</a>
-    <ng-container> <!-- 2 = modérateur -->
-      <a routerLink="/moderation" class="text-white hover:underline">Modérer les ressources</a>
-    </ng-container>
     
 
     <ng-container *ngIf="user$ | async as user; else notLogged">
-      @if(user.role === 'administrateur' || user.role === 'super-administrateur'){
+      @if(user.role === 3 || user.role === 4){
         <ng-container>
           <a routerLink="/admin" class="text-white hover:underline">Gestion Ressources</a>
         </ng-container>
       }
 
-      @if(user.role === 'super-administrateur'){
+      @if(user.role === 4){
         <ng-container>
           <a routerLink="/admin-users" class="text-white hover:underline">Gestion Comptes</a>
         </ng-container>
       }
+      
+      @if(user.role === 2){
+        <ng-container> <!-- 2 = modérateur -->
+          <a routerLink="/moderation" class="text-white hover:underline">Modérer les ressources</a>
+        </ng-container>
+      }
 
-      <ng-container *ngIf="user.role === 'administrateur' || user.role === 'super-administrateur'">
+      <ng-container *ngIf="user.role === 3 || user.role === 4">
         <a routerLink="/admin-dashboard" class="text-white hover:underline">Tableau de bord admin</a>
       </ng-container>
 
       <!-- ✅ Lien vers l'aide visible pour tous -->
       <a routerLink="/aide" class="text-white hover:underline">Aide</a>
 
-      <span class="text-white ml-4">Bonjour, {{ user.role | titlecase }}</span>
       <button (click)="logout()" class="text-white hover:underline ml-2">Déconnexion</button>
     </ng-container>
 

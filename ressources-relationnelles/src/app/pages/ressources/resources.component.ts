@@ -34,7 +34,7 @@ export class ResourcesComponent implements OnInit {
   constructor(
     private ressourceService: RessourceService,
     private categorieService: CategorieService,
-    private authService: AuthService
+    public authService: AuthService
   ) {}
 
   ngOnInit() {
@@ -48,22 +48,26 @@ export class ResourcesComponent implements OnInit {
     });
   }
 
-  applyFilters() {
-    let filtered = this.ressources.filter(r => r.validee); 
-  
-    if (this.selectedType !== 'all') {
-      filtered = filtered.filter(r => r.type === this.selectedType);
-    }
-  
-    filtered.sort((a, b) => {
-      return this.selectedSort === 'recent'
-        ? new Date(b.dateCreation).getTime() - new Date(a.dateCreation).getTime()
-        : new Date(a.dateCreation).getTime() - new Date(b.dateCreation).getTime();
-    });
-  
-    this.displayedRessources = filtered;
-  }
-  
+applyFilters() {
+  let filtered = [...this.ressources];
+
+  // Si l'utilisateur n'est pas admin, on filtre les non-validées
+//  if (!this.authService.isAdmin()) {
+//    filtered = filtered.filter(r => r.validee);
+ // }
+
+//  if (this.selectedType !== 'all') {
+//    filtered = filtered.filter(r => r.type === this.selectedType);
+ // }
+
+//  filtered.sort((a, b) => {
+ //   return this.selectedSort === 'recent'
+ //     ? new Date(b.dateCreation).getTime() - new Date(a.dateCreation).getTime()
+ //     : new Date(a.dateCreation).getTime() - new Date(b.dateCreation).getTime();
+ // });
+
+  this.displayedRessources = filtered;
+}
 
   toggleCreate() {
     this.showCreate = !this.showCreate;

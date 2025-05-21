@@ -52,7 +52,7 @@ export class SignupComponent {
         this.errorMessage = null;
         setTimeout(() => {
       this.router.navigate(['/login']);
-      }, 5000);
+      }, 3500);
       },
       error: (err) => {
         this.errorMessage = err.error.message || "Erreur lors de l'inscription.";

@@ -1,27 +1,34 @@
-<form [formGroup]="signupForm" (ngSubmit)="onSubmit()">
+<section class="flex flex-col items-center justify-center min-h-screen p-6 bg-gray-100">
+    <div class="bg-white p-8 rounded shadow w-full max-w-sm">
 
-  <label for="email">Email</label>
-  <input id="email" formControlName="email" type="email" />
-  <div *ngIf="email?.invalid && (email?.touched || email?.dirty)">
-    <small *ngIf="email?.errors?.['required']">Email requis.</small>
-    <small *ngIf="email?.errors?.['email']">Email invalide.</small>
-  </div>
+        <h1 class="text-2xl font-bold text-center text-blue-600 mb-6">Inscription</h1>
 
-  <label for="password">Mot de passe</label>
-  <input id="password" formControlName="password" type="password" />
-  <div *ngIf="password?.invalid && (password?.touched || password?.dirty)">
-    <small *ngIf="password?.errors?.['required']">Mot de passe requis.</small>
-    <small *ngIf="password?.errors?.['minlength']">Minimum 6 caractères.</small>
-  </div>
+        <form [formGroup]="signupForm" (ngSubmit)="onSubmit()">
 
-  <label for="confirmPassword">Confirmer mot de passe</label>
-  <input id="confirmPassword" formControlName="confirmPassword" type="password" />
-  <div *ngIf="confirmPassword?.invalid && (confirmPassword?.touched || confirmPassword?.dirty)">
-    <small *ngIf="confirmPassword?.errors?.['required']">Confirmation requise.</small>
-  </div>
+            <label for="email">Email</label>
+            <input id="email" formControlName="email" type="email" />
+            <div *ngIf="email?.invalid && (email?.touched || email?.dirty)">
+                <small *ngIf="email?.errors?.['required']">Email requis.</small>
+                <small *ngIf="email?.errors?.['email']">Email invalide.</small>
+            </div>
 
-  <button type="submit" [disabled]="signupForm.invalid">S'inscrire</button>
+            <label for="password">Mot de passe</label>
+            <input id="password" formControlName="password" type="password" />
+            <div *ngIf="password?.invalid && (password?.touched || password?.dirty)">
+                <small *ngIf="password?.errors?.['required']">Mot de passe requis.</small>
+                <small *ngIf="password?.errors?.['minlength']">Minimum 6 caractères.</small>
+            </div>
 
-  <p class="success" *ngIf="successMessage">{{ successMessage }}</p>
-  <p class="error" *ngIf="errorMessage">{{ errorMessage }}</p>
-</form>
+            <label for="confirmPassword">Confirmer mot de passe</label>
+            <input id="confirmPassword" formControlName="confirmPassword" type="password" />
+            <div *ngIf="confirmPassword?.invalid && (confirmPassword?.touched || confirmPassword?.dirty)">
+                <small *ngIf="confirmPassword?.errors?.['required']">Confirmation requise.</small>
+            </div>
+
+            <button type="submit" [disabled]="signupForm.invalid">S'inscrire</button>
+
+            <p class="success" *ngIf="successMessage">{{ successMessage }}</p>
+            <p class="error" *ngIf="errorMessage">{{ errorMessage }}</p>
+        </form>
+    </div>
+</section>

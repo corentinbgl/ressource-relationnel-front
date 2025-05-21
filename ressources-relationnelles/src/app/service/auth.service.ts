@@ -6,7 +6,7 @@ import { environment } from '../../environments/environments';
 
 export interface AuthResponse {
   token: string;
-  role: string;
+  role: number;
   email: string;
   id: number;
 }
@@ -65,7 +65,7 @@ export class AuthService {
     return this.currentUserSubject.value?.token || null;
   }
 
-  getUserRole(): string | null {
+  getUserRole(): number | null {
     return this.currentUserSubject.value?.role || null;
   }
 
@@ -84,5 +84,22 @@ export class AuthService {
 
   register(data: {email: string; password: string }): Observable<any> {
   return this.http.post(`${environment.apiUrl}/User`, data);
+  }
+
+getUserRoleName(): string | null {
+  const roleId = this.getUserRole();
+
+  switch (roleId) {
+    case 1: return 'Citoyen';
+    case 2: return 'Modérateur';
+    case 3: return 'Administrateur';
+    case 4: return 'SuperAdministrateur';
+    default: return null;
+  }
 }
+
+  isAdmin(): boolean {
+    const role = this.getUserRoleName();
+    return role === 'admin' || role === 'superadmin';
+  }
 }
