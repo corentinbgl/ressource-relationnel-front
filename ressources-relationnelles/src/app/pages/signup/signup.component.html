@@ -1,0 +1,27 @@
+<form [formGroup]="signupForm" (ngSubmit)="onSubmit()">
+
+  <label for="email">Email</label>
+  <input id="email" formControlName="email" type="email" />
+  <div *ngIf="email?.invalid && (email?.touched || email?.dirty)">
+    <small *ngIf="email?.errors?.['required']">Email requis.</small>
+    <small *ngIf="email?.errors?.['email']">Email invalide.</small>
+  </div>
+
+  <label for="password">Mot de passe</label>
+  <input id="password" formControlName="password" type="password" />
+  <div *ngIf="password?.invalid && (password?.touched || password?.dirty)">
+    <small *ngIf="password?.errors?.['required']">Mot de passe requis.</small>
+    <small *ngIf="password?.errors?.['minlength']">Minimum 6 caractères.</small>
+  </div>
+
+  <label for="confirmPassword">Confirmer mot de passe</label>
+  <input id="confirmPassword" formControlName="confirmPassword" type="password" />
+  <div *ngIf="confirmPassword?.invalid && (confirmPassword?.touched || confirmPassword?.dirty)">
+    <small *ngIf="confirmPassword?.errors?.['required']">Confirmation requise.</small>
+  </div>
+
+  <button type="submit" [disabled]="signupForm.invalid">S'inscrire</button>
+
+  <p class="success" *ngIf="successMessage">{{ successMessage }}</p>
+  <p class="error" *ngIf="errorMessage">{{ errorMessage }}</p>
+</form>

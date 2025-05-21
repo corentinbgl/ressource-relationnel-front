@@ -1,0 +1,121 @@
+/* Styles généraux */
+:host {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 100vh;
+  background: #f5f7fa;
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  padding: 20px;
+  box-sizing: border-box;
+}
+
+/* Conteneur du formulaire */
+form {
+  background: #fff;
+  padding: 30px 40px;
+  border-radius: 8px;
+  box-shadow: 0 8px 16px rgba(0,0,0,0.1);
+  max-width: 400px;
+  width: 100%;
+  box-sizing: border-box;
+}
+
+/* Titres et labels */
+label {
+  display: block;
+  font-weight: 600;
+  margin-bottom: 6px;
+  color: #333;
+  font-size: 0.95rem;
+}
+
+/* Inputs */
+input[type="text"],
+input[type="email"],
+input[type="password"] {
+  width: 100%;
+  padding: 10px 14px;
+  margin-bottom: 14px;
+  border: 1.5px solid #ccc;
+  border-radius: 5px;
+  font-size: 1rem;
+  transition: border-color 0.3s ease;
+  box-sizing: border-box;
+}
+
+input[type="text"]:focus,
+input[type="email"]:focus,
+input[type="password"]:focus {
+  border-color: #4a90e2;
+  outline: none;
+}
+
+/* Messages d’erreur */
+small {
+  color: #e74c3c;
+  font-size: 0.8rem;
+  margin-top: -10px;
+  margin-bottom: 10px;
+  display: block;
+}
+
+/* Bouton */
+button[type="submit"] {
+  width: 100%;
+  padding: 12px 0;
+  background-color: #4a90e2;
+  border: none;
+  color: white;
+  font-weight: 700;
+  font-size: 1rem;
+  border-radius: 5px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+  margin-top: 10px;
+}
+
+button[type="submit"]:hover:not(:disabled) {
+  background-color: #357abd;
+}
+
+button[type="submit"]:disabled {
+  background-color: #a3c1f7;
+  cursor: not-allowed;
+}
+
+/* Messages succès / erreur */
+p.success {
+  color: #27ae60;
+  margin-top: 15px;
+  font-weight: 600;
+  text-align: center;
+}
+
+p.error {
+  color: #e74c3c;
+  margin-top: 15px;
+  font-weight: 600;
+  text-align: center;
+}
+
+/* Responsive */
+@media (max-width: 480px) {
+  form {
+    padding: 25px 20px;
+    max-width: 100%;
+    box-shadow: none;
+    border-radius: 0;
+  }
+
+  input[type="text"],
+  input[type="email"],
+  input[type="password"] {
+    font-size: 0.9rem;
+  }
+
+  button[type="submit"] {
+    font-size: 0.95rem;
+    padding: 10px 0;
+  }
+}
