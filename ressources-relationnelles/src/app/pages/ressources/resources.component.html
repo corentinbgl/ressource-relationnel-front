@@ -5,7 +5,14 @@
     <a routerLink="/admin" class="bg-green-600 text-white px-4 py-2 rounded hover:bg-green-700 transition">
       Accès Admin
     </a>
+
+    <a routerLink="/ressource-create" class="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600">
+      Créer une ressource
+    </a>
+    
   </div>
+
+ 
 
   <!-- Filtres -->
   <div class="flex flex-col md:flex-row justify-center gap-4 mb-8">
@@ -34,7 +41,43 @@
             Voir la ressource
           </a>
         </div>
+        <div class="mt-2">
+          <button class="bg-gray-200 text-gray-700 px-3 py-1 rounded hover:bg-gray-300 text-sm flex items-center gap-2">
+            <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                d="M15 8a3 3 0 100-6 3 3 0 000 6zM5.5 12.5a3.5 3.5 0 107 0 3.5 3.5 0 00-7 0zm13 3a3.5 3.5 0 11-7 0 3.5 3.5 0 017 0z" />
+              <line x1="8.5" y1="12.5" x2="15.5" y2="12.5" stroke="currentColor" stroke-width="2"/>
+            </svg>
+            Partager
+          </button>
+        </div>
       </div>
     }
   </div>
 </section>
+
+@if(showCreate){
+  <form *ngIf="showCreate" (ngSubmit)="addRessource()" class="bg-white p-6 rounded-lg shadow mb-8 w-full max-w-2xl mx-auto space-y-4">
+    <input [(ngModel)]="newRessource.titre" name="titre" placeholder="Titre" class="w-full p-2 border rounded" required />
+    <textarea [(ngModel)]="newRessource.description" name="description" placeholder="Description" class="w-full p-2 border rounded" required></textarea>
+    
+    <select [(ngModel)]="newRessource.categorie" name="categorie" class="w-full p-2 border rounded" required>
+      <option value="" disabled selected>Choisir une catégorie</option>
+      <ng-container *ngFor="let cat of categories; trackBy: trackCat">
+        <option [value]="cat.nom">{{ cat.nom }}</option>
+      </ng-container>
+    </select>
+  
+    <select [(ngModel)]="newRessource.type" name="type" class="w-full p-2 border rounded">
+      <option value="publique">Publique</option>
+      <option value="restreinte">Restreinte</option>
+    </select>
+  
+    <div class="flex justify-end gap-4">
+      <button type="button" (click)="toggleCreate()" class="px-4 py-2 border rounded hover:bg-gray-100">Annuler</button>
+      <button type="submit" class="bg-green-500 text-white px-4 py-2 rounded hover:bg-green-600">Créer</button>
+    </div>
+  </form>
+  
+}
+

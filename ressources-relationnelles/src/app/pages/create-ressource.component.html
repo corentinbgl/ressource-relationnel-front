@@ -1,0 +1,26 @@
+<section class="p-6 bg-gray-100 min-h-screen">
+    <h1 class="text-3xl font-bold text-blue-600 mb-6 text-center">Créer une nouvelle ressource</h1>
+  
+    <form (ngSubmit)="addRessource()" class="bg-white p-6 rounded shadow max-w-xl mx-auto space-y-4">
+      <input [(ngModel)]="newRessource.titre" name="titre" placeholder="Titre" class="w-full p-2 border rounded" required />
+      <textarea [(ngModel)]="newRessource.description" name="description" placeholder="Description" class="w-full p-2 border rounded" required></textarea>
+  
+      <select [(ngModel)]="newRessource.categorie" name="categorie" class="w-full p-2 border rounded" required>
+        <option value="" disabled selected>Choisir une catégorie</option>
+        <option *ngFor="let cat of categories" [value]="cat.nom">
+          {{ cat.nom }}
+        </option>
+      </select>
+  
+      <select [(ngModel)]="newRessource.type" name="type" class="w-full p-2 border rounded">
+        <option value="publique">Publique</option>
+        <option value="restreinte">Restreinte</option>
+      </select>
+  
+      <div class="flex justify-end gap-4">
+        <button routerLink="/resources" type="button" class="px-4 py-2 border rounded hover:bg-gray-100">Annuler</button>
+        <button type="submit" class="bg-green-500 text-white px-4 py-2 rounded hover:bg-green-600">Créer</button>
+      </div>
+    </form>
+  </section>
+  

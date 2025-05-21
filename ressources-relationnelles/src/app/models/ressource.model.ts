@@ -6,5 +6,8 @@ export interface Ressource {
     categorie: string;
     dateCreation: Date;
     userID : number
+    validee: boolean; 
+    suspendue?: boolean;
+
   }
   

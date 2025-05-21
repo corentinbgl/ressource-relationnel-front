@@ -6,6 +6,7 @@ import { CommentaireService } from '../service/commentaire.service';
 import { UserService } from '../service/user.service';
 import { RouterModule } from '@angular/router';
 import { AuthService } from '../service/auth.service';
+import { Ressource } from '../models/ressource.model';
 
 @Component({
   selector: 'app-admin-dashboard',
@@ -15,11 +16,15 @@ import { AuthService } from '../service/auth.service';
   styleUrls: ['./admin-dashboard.component.scss']
 })
 export class AdminDashboardComponent implements OnInit {
+  ressources: Ressource[] = [];
+
   totalRessources = 0;
   totalFavoris = 0;
   totalExploitees = 0;
   totalCommentaires = 0;
   totalUtilisateurs = 0;
+  totalSuspendues = 0;
+  totalCreeesCetteSemaine = 0;
 
   constructor(
     private ressourceService: RessourceService,
@@ -31,8 +36,17 @@ export class AdminDashboardComponent implements OnInit {
 
   ngOnInit(): void {
     this.ressourceService.getAll().subscribe(ressources => {
+      this.ressources = ressources;
       this.totalRessources = ressources.length;
-  
+      this.totalSuspendues = ressources.filter(r => r.suspendue).length;
+
+      const uneSemaine = 1000 * 60 * 60 * 24 * 7;
+      const maintenant = Date.now();
+      this.totalCreeesCetteSemaine = ressources.filter(r => {
+        const t = new Date(r.dateCreation).getTime();
+        return maintenant - t <= uneSemaine;
+      }).length;
+
       // Total commentaires
       let totalCommentaires = 0;
       ressources.forEach(r => {
@@ -42,7 +56,7 @@ export class AdminDashboardComponent implements OnInit {
         });
       });
     });
-  
+
     this.authService.currentUser$.subscribe(user => {
       if (user) {
         this.progressionService.getForUser(user.id).subscribe(prog => {
@@ -51,7 +65,7 @@ export class AdminDashboardComponent implements OnInit {
         });
       }
     });
-  
+
     this.userService.getAllUsers().subscribe(users => {
       this.totalUtilisateurs = users.length;
     });

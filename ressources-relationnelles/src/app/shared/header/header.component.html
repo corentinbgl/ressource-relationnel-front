@@ -5,6 +5,10 @@
   <div class="space-x-4 flex items-center">
     <a routerLink="/" class="text-white hover:underline">Accueil</a>
     <a routerLink="/resources" class="text-white hover:underline">Ressources</a>
+    <ng-container> <!-- 2 = modérateur -->
+      <a routerLink="/moderation" class="text-white hover:underline">Modérer les ressources</a>
+    </ng-container>
+    
 
     <ng-container *ngIf="user$ | async as user; else notLogged">
       @if(user.role === 'administrateur' || user.role === 'super-administrateur'){

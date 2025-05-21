@@ -8,6 +8,8 @@ import { AdminUsersComponent } from './pages/admin-users/admin-users.component';
 import { ProgressionComponent } from './pages/progression.component';
 import { AdminDashboardComponent } from './pages/admin-dashboard.component';
 import { AideComponent } from './pages/aide/aide.component';
+import { CreateRessourceComponent } from './pages/create-ressource.component';
+import { ModerateRessourcesComponent } from './pages/moderate-ressources.component';
 
 export const routes: Routes = [
     { path: '', component: HomeComponent },
@@ -18,7 +20,15 @@ export const routes: Routes = [
     { path: 'admin-users', component: AdminUsersComponent },
     { path: 'progression', component: ProgressionComponent },
     { path: 'admin-dashboard', component: AdminDashboardComponent },
-    { path: 'aide', component: AideComponent}
+    { path: 'aide', component: AideComponent},
+    {
+      path: 'ressource-create',
+      component: CreateRessourceComponent
+    },
+    {
+      path: 'moderation',
+      component: ModerateRessourcesComponent
+    }
 
   ];
   

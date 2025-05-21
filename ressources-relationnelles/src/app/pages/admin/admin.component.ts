@@ -54,7 +54,8 @@ addOrUpdateRessource() {
       categorie: this.newRessource.categorie!,
       type: this.newRessource.type!,
       dateCreation: new Date(),
-      userID : 0
+      userID : 0,
+      validee: false
     };
 
     if (this.isEditing && this.editingRessourceId !== null) {

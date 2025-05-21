@@ -19,7 +19,7 @@ import { ProgressionService } from '../../service/progression.service';
 export class ResourceDetailsComponent implements OnInit {
   ressource?: Ressource;
 
-  
+  commentaires: Commentaire[] = [];
 
   commentairesPrincipaux: Commentaire[] = []; // ➔ seulement les commentaires sans réponse
   reponsesParCommentaire: { [parentId: number]: Commentaire[] } = {}; // ➔ réponses par commentaire
@@ -66,8 +66,27 @@ isMiseDeCote: boolean = false;
     this.authService.currentUser$.subscribe(user => {
       this.userEmail = user?.email || null;
     });
+
+    this.updateCommentaires();
   }
 
+
+  updateCommentaires() {
+    const id = this.ressource?.id;
+    if (!id) return;
+
+    const coms = this.commentaires.filter(c => c.ressourceId === id);
+
+    this.commentairesPrincipaux = coms.filter(c => !c.reponseA);
+
+    this.reponsesParCommentaire = {};
+    coms.filter(c => c.reponseA).forEach(reply => {
+      if (!this.reponsesParCommentaire[reply.reponseA!]) {
+        this.reponsesParCommentaire[reply.reponseA!] = [];
+      }
+      this.reponsesParCommentaire[reply.reponseA!].push(reply);
+    });
+  }
   addCommentaire() {
     if (this.newComment && this.userEmail && this.ressource) {
       const newCom: Commentaire = {
@@ -77,15 +96,15 @@ isMiseDeCote: boolean = false;
         contenu: this.newComment,
         date: new Date()
       };
-      this.commentaireService.create(newCom);
+      this.commentaires.push(newCom);
       this.newComment = '';
+      this.updateCommentaires();
     }
   }
 
   startReply(commentId: number) {
     this.replyingToId = commentId;
   }
-  
 
   cancelReply() {
     this.replyingToId = null;
@@ -102,14 +121,16 @@ isMiseDeCote: boolean = false;
         date: new Date(),
         reponseA: this.replyingToId
       };
-      this.commentaireService.create(newReply);
+      this.commentaires.push(newReply);
       this.replyContent = '';
       this.replyingToId = null;
+      this.updateCommentaires();
     }
   }
 
   deleteCommentaire(id: number) {
-    this.commentaireService.delete(id);
+    this.commentaires = this.commentaires.filter(c => c.id !== id && c.reponseA !== id);
+    this.updateCommentaires();
   }
 
   toggleFavori() {
