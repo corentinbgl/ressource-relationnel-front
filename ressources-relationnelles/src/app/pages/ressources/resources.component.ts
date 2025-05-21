@@ -19,6 +19,8 @@ export class ResourcesComponent implements OnInit {
   displayedRessources: Ressource[] = [];
   selectedType: string = 'all';
   selectedSort: string = 'recent';
+  openedShareIndex: number | null = null;
+  toastMessage: string | null = null;
 
   categories: Categorie[] = [];
   showCreate: boolean = false;
@@ -121,5 +123,24 @@ applyFilters() {
       this.toggleCreate();
     }
   }
+
+  toggleShareMenu(index: number) {
+  this.openedShareIndex = this.openedShareIndex === index ? null : index;
+}
+
+
+
+shareOnNetwork(network: string) {
+  this.toastMessage = `La ressource a été partagée sur ${network} !`;
+
+  // Ferme le menu après partage
+  this.openedShareIndex = null;
+
+  // Efface le message après 3 secondes
+  setTimeout(() => {
+    this.toastMessage = null;
+  }, 3000);
+}
+
   
 }

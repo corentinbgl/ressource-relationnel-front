@@ -1,15 +1,16 @@
 <section class="p-6 bg-gray-100 min-h-screen">
   <div class="flex justify-between items-center mb-8">
     <h1 class="text-3xl font-bold text-blue-600">Toutes les ressources</h1>
-    
-    <a *ngIf="authService.isAdmin()" routerLink="/admin" class="bg-green-600 text-white px-4 py-2 rounded hover:bg-green-700 transition">
+
+    <a *ngIf="authService.isAdmin()" routerLink="/admin"
+      class="bg-green-600 text-white px-4 py-2 rounded hover:bg-green-700 transition">
       Accès Admin
     </a>
 
-    
+
   </div>
 
- 
+
 
   <!-- Filtres -->
   <div class="flex flex-col md:flex-row justify-center gap-4 mb-8">
@@ -28,53 +29,74 @@
   <!-- Liste des ressources -->
   <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
     @for (ressource of displayedRessources; track $index) {
-      <div class="bg-white p-6 rounded-lg shadow hover:shadow-lg transition">
-        <h2 class="text-xl font-semibold text-blue-500 mb-2">{{ ressource.titre }}</h2>
-        <p class="text-gray-600 mb-4">{{ ressource.description }}</p>
-        <p class="text-sm text-gray-400 mb-2">Catégorie : {{ ressource.categorie }}</p>
-        <p class="text-sm text-gray-400">Créée le : {{ ressource.dateCreation | date }}</p>
-        <div class="mt-4">
-          <a [routerLink]="['/resource', ressource.id]" class="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600 transition inline-block">
-            Voir la ressource
-          </a>
-        </div>
-        <div class="mt-2">
-          <button class="bg-gray-200 text-gray-700 px-3 py-1 rounded hover:bg-gray-300 text-sm flex items-center gap-2">
-            <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                d="M15 8a3 3 0 100-6 3 3 0 000 6zM5.5 12.5a3.5 3.5 0 107 0 3.5 3.5 0 00-7 0zm13 3a3.5 3.5 0 11-7 0 3.5 3.5 0 017 0z" />
-              <line x1="8.5" y1="12.5" x2="15.5" y2="12.5" stroke="currentColor" stroke-width="2"/>
-            </svg>
-            Partager
+    <div class="bg-white p-6 rounded-lg shadow hover:shadow-lg transition relative">
+      <h2 class="text-xl font-semibold text-blue-500 mb-2">{{ ressource.titre }}</h2>
+      <p class="text-gray-600 mb-4">{{ ressource.description }}</p>
+      <p class="text-sm text-gray-400 mb-2">Catégorie : {{ ressource.categorie }}</p>
+      <p class="text-sm text-gray-400">Créée le : {{ ressource.dateCreation | date }}</p>
+      <div class="mt-4">
+        <a [routerLink]="['/resource', ressource.id]"
+          class="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600 transition inline-block">
+          Voir la ressource
+        </a>
+      </div>
+      <div class="mt-2 relative inline-block text-left">
+        <button (click)="toggleShareMenu($index)"
+          class="bg-gray-200 text-gray-700 px-3 py-1 rounded hover:bg-gray-300 text-sm flex items-center gap-2 focus:outline-none"
+          aria-haspopup="true" [attr.aria-expanded]="openedShareIndex === $index">
+          Partager
+
+          <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+              d="M15 8a3 3 0 100-6 3 3 0 000 6zM5.5 12.5a3.5 3.5 0 107 0 3.5 3.5 0 00-7 0zm13 3a3.5 3.5 0 11-7 0 3.5 3.5 0 017 0z" />
+            <line x1="8.5" y1="12.5" x2="15.5" y2="12.5" stroke="currentColor" stroke-width="2" />
+          </svg>
+        </button>
+
+        <div *ngIf="openedShareIndex === $index"
+          class="origin-top-right absolute right-0 mt-2 w-44 rounded-md shadow-lg bg-white ring-1 ring-black ring-opacity-5 focus:outline-none z-20"
+          role="menu" aria-orientation="vertical" aria-labelledby="menu-button" tabindex="-1">
+          <button *ngFor="let network of ['Facebook', 'Linkedin', 'Instagram', 'TikTok']" (click)="shareOnNetwork(network)"
+            class="block w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-gray-100" role="menuitem"
+            tabindex="-1">
+            {{ network }}
           </button>
         </div>
       </div>
+    </div>
     }
   </div>
+
 </section>
 
 @if(showCreate){
-  <form *ngIf="showCreate" (ngSubmit)="addRessource()" class="bg-white p-6 rounded-lg shadow mb-8 w-full max-w-2xl mx-auto space-y-4">
-    <input [(ngModel)]="newRessource.titre" name="titre" placeholder="Titre" class="w-full p-2 border rounded" required />
-    <textarea [(ngModel)]="newRessource.description" name="description" placeholder="Description" class="w-full p-2 border rounded" required></textarea>
-    
-    <select [(ngModel)]="newRessource.categorie" name="categorie" class="w-full p-2 border rounded" required>
-      <option value="" disabled selected>Choisir une catégorie</option>
-      <ng-container *ngFor="let cat of categories; trackBy: trackCat">
-        <option [value]="cat.nom">{{ cat.nom }}</option>
-      </ng-container>
-    </select>
-  
-    <select [(ngModel)]="newRessource.type" name="type" class="w-full p-2 border rounded">
-      <option value="publique">Publique</option>
-      <option value="restreinte">Restreinte</option>
-    </select>
-  
-    <div class="flex justify-end gap-4">
-      <button type="button" (click)="toggleCreate()" class="px-4 py-2 border rounded hover:bg-gray-100">Annuler</button>
-      <button type="submit" class="bg-green-500 text-white px-4 py-2 rounded hover:bg-green-600">Créer</button>
-    </div>
-  </form>
-  
+<form *ngIf="showCreate" (ngSubmit)="addRessource()"
+  class="bg-white p-6 rounded-lg shadow mb-8 w-full max-w-2xl mx-auto space-y-4">
+  <input [(ngModel)]="newRessource.titre" name="titre" placeholder="Titre" class="w-full p-2 border rounded" required />
+  <textarea [(ngModel)]="newRessource.description" name="description" placeholder="Description"
+    class="w-full p-2 border rounded" required></textarea>
+
+  <select [(ngModel)]="newRessource.categorie" name="categorie" class="w-full p-2 border rounded" required>
+    <option value="" disabled selected>Choisir une catégorie</option>
+    <ng-container *ngFor="let cat of categories; trackBy: trackCat">
+      <option [value]="cat.nom">{{ cat.nom }}</option>
+    </ng-container>
+  </select>
+
+  <select [(ngModel)]="newRessource.type" name="type" class="w-full p-2 border rounded">
+    <option value="publique">Publique</option>
+    <option value="restreinte">Restreinte</option>
+  </select>
+
+  <div class="flex justify-end gap-4">
+    <button type="button" (click)="toggleCreate()" class="px-4 py-2 border rounded hover:bg-gray-100">Annuler</button>
+    <button type="submit" class="bg-green-500 text-white px-4 py-2 rounded hover:bg-green-600">Créer</button>
+  </div>
+</form>
+
 }
 
+<div *ngIf="toastMessage" 
+     class="fixed bottom-4 left-1/2 transform -translate-x-1/2 bg-green-500 text-white px-4 py-2 rounded shadow-lg z-50">
+  {{ toastMessage }}
+</div>
