@@ -70,4 +70,39 @@ export class AdminDashboardComponent implements OnInit {
       this.totalUtilisateurs = users.length;
     });
   }
+  exportStatsToCSV() {
+  // Construire les données CSV : tableau de lignes [titre; valeur]
+  const stats = [
+    ['Ressources', this.totalRessources],
+    ['Favoris', this.totalFavoris],
+    ['Exploitées', this.totalExploitees],
+    ['Commentaires', this.totalCommentaires],
+    ['Utilisateurs', this.totalUtilisateurs],
+    ['Suspendues', this.totalSuspendues],
+    ['Créées cette semaine', this.totalCreeesCetteSemaine],
+  ];
+
+  // Transformer en texte CSV (séparateur point-virgule)
+  const csvContent = stats.map(e => e.join(';')).join('\n');
+
+  // Créer un Blob avec le contenu CSV
+  const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
+
+  // Créer un lien de téléchargement temporaire
+  const link = document.createElement('a');
+  const url = URL.createObjectURL(blob);
+  link.setAttribute('href', url);
+  link.setAttribute('download', 'statistiques.csv');
+  link.style.visibility = 'hidden';
+  document.body.appendChild(link);
+
+  // Simuler clic sur le lien pour lancer le téléchargement
+  link.click();
+
+  // Nettoyer le DOM et l'URL
+  document.body.removeChild(link);
+  URL.revokeObjectURL(url);
 }
+
+}
+
