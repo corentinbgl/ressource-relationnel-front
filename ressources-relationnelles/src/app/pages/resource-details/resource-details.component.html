@@ -50,7 +50,7 @@
     <div *ngFor="let com of commentairesPrincipaux">
       <div class="bg-white p-4 rounded shadow mb-6">
         
-        <!-- Zone d'édition -->
+        <!-- Zone édition commentaire principal -->
         <div *ngIf="editingCommentId === com.id; else displayComment">
           <textarea [(ngModel)]="editedCommentContent" class="w-full p-2 border rounded mb-2"></textarea>
           <div class="flex gap-2">
@@ -62,8 +62,8 @@
             </button>
           </div>
         </div>
-        
-        <!-- Affichage classique du commentaire -->
+
+        <!-- Affichage commentaire principal -->
         <ng-template #displayComment>
           <p class="text-gray-700 mb-2">{{ com.contenu }}</p>
           <p class="text-sm text-gray-500">Par : {{ com.auteur }} - {{ com.date | date:'short' }}</p>
@@ -73,17 +73,16 @@
               Répondre
             </button>
 
-            <button *ngIf="userEmail === 'moderateur@gmail.com' || userEmail === 'sadmin@gmail.com'"
-                    (click)="deleteCommentaire(com.id)"
-                    class="text-red-500 hover:underline text-sm">
-              Supprimer
-            </button>
-
-            <!-- Bouton Éditer visible si utilisateur est auteur ou modérateur -->
             <button *ngIf="userEmail === com.auteur || userEmail === 'moderateur@gmail.com' || userEmail === 'sadmin@gmail.com'"
                     (click)="startEdit(com.id, com.contenu)"
                     class="text-indigo-600 hover:underline text-sm">
               Éditer
+            </button>
+
+            <button *ngIf="userEmail === 'moderateur@gmail.com' || userEmail === 'sadmin@gmail.com'"
+                    (click)="deleteCommentaire(com.id)"
+                    class="text-red-500 hover:underline text-sm">
+              Supprimer
             </button>
           </div>
         </ng-template>
@@ -104,14 +103,40 @@
         <!-- Affichage des réponses -->
         <div *ngIf="reponsesParCommentaire[com.id]">
           <div *ngFor="let reply of reponsesParCommentaire[com.id]" class="bg-gray-100 p-3 rounded ml-6 mt-2">
-            <p class="text-gray-700 mb-1">{{ reply.contenu }}</p>
-            <p class="text-xs text-gray-500">Réponse par : {{ reply.auteur }} - {{ reply.date | date:'short' }}</p>
+            
+            <!-- Zone édition réponse -->
+            <div *ngIf="editingCommentId === reply.id; else displayReply">
+              <textarea [(ngModel)]="editedCommentContent" class="w-full p-2 border rounded mb-2"></textarea>
+              <div class="flex gap-2">
+                <button (click)="saveEditedComment(reply.id)" class="bg-green-500 text-white px-4 py-1 rounded hover:bg-green-600">
+                  Sauvegarder
+                </button>
+                <button (click)="cancelEdit()" class="bg-gray-300 text-gray-800 px-4 py-1 rounded hover:bg-gray-400">
+                  Annuler
+                </button>
+              </div>
+            </div>
 
-            <button *ngIf="userEmail === 'moderateur@exemple.com'"
-                    (click)="deleteCommentaire(reply.id)"
-                    class="text-red-500 hover:underline text-xs mt-1">
-              Supprimer
-            </button>
+            <!-- Affichage réponse -->
+            <ng-template #displayReply>
+              <p class="text-gray-700 mb-1">{{ reply.contenu }}</p>
+              <p class="text-xs text-gray-500">Réponse par : {{ reply.auteur }} - {{ reply.date | date:'short' }}</p>
+
+              <div class="flex gap-4 mt-1">
+                <button *ngIf="userEmail === reply.auteur || userEmail === 'moderateur@gmail.com' || userEmail === 'sadmin@gmail.com'"
+                        (click)="startEdit(reply.id, reply.contenu)"
+                        class="text-indigo-600 hover:underline text-xs">
+                  Éditer
+                </button>
+
+                <button *ngIf="userEmail === 'moderateur@gmail.com' || userEmail === 'sadmin@gmail.com'"
+                        (click)="deleteCommentaire(reply.id)"
+                        class="text-red-500 hover:underline text-xs">
+                  Supprimer
+                </button>
+              </div>
+            </ng-template>
+
           </div>
         </div>
 

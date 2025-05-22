@@ -142,10 +142,27 @@ export class ResourceDetailsComponent implements OnInit {
   }
 
   deleteCommentaire(id: number) {
-    this.commentaires = this.commentaires.filter(
-      (c) => c.id !== id && c.reponseA !== id
+    // Supprimer un commentaire principal
+    const indexPrincipal = this.commentairesPrincipaux.findIndex(
+      (c) => c.id === id
     );
-    this.updateCommentaires();
+    if (indexPrincipal !== -1) {
+      this.commentairesPrincipaux.splice(indexPrincipal, 1);
+      // Supprimer aussi ses réponses si besoin
+      delete this.reponsesParCommentaire[id];
+      return;
+    }
+
+    // Supprimer un commentaire enfant
+    for (const parentId in this.reponsesParCommentaire) {
+      const indexEnfant = this.reponsesParCommentaire[parentId].findIndex(
+        (c) => c.id === id
+      );
+      if (indexEnfant !== -1) {
+        this.reponsesParCommentaire[parentId].splice(indexEnfant, 1);
+        return;
+      }
+    }
   }
 
   toggleFavori() {
