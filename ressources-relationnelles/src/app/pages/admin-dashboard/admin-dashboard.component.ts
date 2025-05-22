@@ -1,4 +1,10 @@
-import { Component, AfterViewInit, ElementRef, ViewChild, OnInit } from '@angular/core';
+import {
+  Component,
+  AfterViewInit,
+  ElementRef,
+  ViewChild,
+  OnInit,
+} from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RessourceService } from '../../service/ressource.service';
 import { ProgressionService } from '../../service/progression.service';
@@ -22,18 +28,21 @@ export class AdminDashboardComponent implements OnInit {
   allRessources: Ressource[] = [];
   ressources: Ressource[] = [];
 
-   @ViewChild('mapContainer', { static: false }) mapContainer!: ElementRef;
+  @ViewChild('mapContainer', { static: false }) mapContainer!: ElementRef;
 
   map!: L.Map;
 
   ngAfterViewInit(): void {
     const center: L.LatLngExpression = [48.8566, 2.3522];
-    this.map = L.map(this.mapContainer.nativeElement).setView([48.8566, 2.3522], 6);
+    this.map = L.map(this.mapContainer.nativeElement).setView(
+      [48.8566, 2.3522],
+      6
+    );
 
     L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-      attribution: '© OpenStreetMap contributors'
+      attribution: '© OpenStreetMap contributors',
     }).addTo(this.map);
-     // Générer une position aléatoire à +/- 0.5 degré autour du centre
+    // Générer une position aléatoire à +/- 0.5 degré autour du centre
     const randomLat = center[0] + (Math.random() - 0.5);
     const randomLng = center[1] + (Math.random() - 0.5);
     const randomPosition: L.LatLngExpression = [randomLat, randomLng];
@@ -116,11 +125,15 @@ export class AdminDashboardComponent implements OnInit {
 
     this.authService.currentUser$.subscribe((user) => {
       if (user) {
-        this.progressionService.getForUser(user.id).subscribe((progressions) => {
-          this.totalFavoris = progressions.filter((p) => p.favori).length;
-          this.totalExploitees = progressions.filter((p) => p.exploitee).length;
-          this.updateStats();
-        });
+        this.progressionService
+          .getForUser(user.id)
+          .subscribe((progressions) => {
+            this.totalFavoris = progressions.filter((p) => p.favori).length;
+            this.totalExploitees = progressions.filter(
+              (p) => p.exploitee
+            ).length;
+            this.updateStats();
+          });
       }
     });
 
@@ -134,7 +147,9 @@ export class AdminDashboardComponent implements OnInit {
 
     const cutoff = this.getDateCutoff(this.filters.periode);
     if (cutoff) {
-      filtered = filtered.filter((r) => new Date(r.dateCreation || 0) >= cutoff);
+      filtered = filtered.filter(
+        (r) => new Date(r.dateCreation || 0) >= cutoff
+      );
     }
 
     if (this.filters.categorie) {
@@ -182,6 +197,12 @@ export class AdminDashboardComponent implements OnInit {
       ['Utilisateurs', this.totalUtilisateurs],
       ['Suspendues', this.totalSuspendues],
       ['Créées cette semaine', this.totalCreeesCetteSemaine],
+
+      // Ajouter les stats fictives "en dur"
+      ['Consultations', this.stats.consultations],
+      ['Recherches', this.stats.recherches],
+      ['Exploitations', this.stats.exploitations],
+      ['Créations', this.stats.creations],
     ];
 
     const csvContent = stats.map((e) => e.join(';')).join('\n');
@@ -196,7 +217,6 @@ export class AdminDashboardComponent implements OnInit {
     document.body.removeChild(link);
     URL.revokeObjectURL(url);
   }
-
   normalizeString(str: string): string {
     return str
       .normalize('NFD')
