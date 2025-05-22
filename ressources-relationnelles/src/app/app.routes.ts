@@ -11,6 +11,7 @@ import { AideComponent } from './pages/aide/aide.component';
 import { CreateRessourceComponent } from './pages/create-ressource.component';
 import { ModerateRessourcesComponent } from './pages/moderate-ressources.component';
 import { SignupComponent } from './pages/signup/signup.component';
+import { LogsComponent } from './pages/logs/logs.component';
 
 export const routes: Routes = [
     { path: '', component: HomeComponent },
@@ -23,6 +24,7 @@ export const routes: Routes = [
     { path: 'admin-dashboard', component: AdminDashboardComponent },
     { path: 'aide', component: AideComponent},
     { path: 'signup', component: SignupComponent},
+    {path: 'logs', component: LogsComponent},
     {
       path: 'ressource-create',
       component: CreateRessourceComponent

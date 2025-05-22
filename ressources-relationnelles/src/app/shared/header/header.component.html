@@ -9,7 +9,7 @@
     </a>
 
     <div class="text-white font-semibold hidden md:block">
-      <span>{{ authService.getUserRoleName() || 'Non connecté' }}</span>
+      <span>{{ authService.getUserRoleName() || "Non connecté" }}</span>
     </div>
 
     <!-- Burger visible uniquement sur mobile -->
@@ -37,13 +37,13 @@
 
   <!-- Rôle centré sur mobile uniquement -->
   <div class="text-white font-semibold text-center mt-2 md:hidden">
-    <span>{{ authService.getUserRoleName() || 'Non connecté' }}</span>
+    <span>{{ authService.getUserRoleName() || "Non connecté" }}</span>
   </div>
 
   <!-- Menu -->
   <div
     class="mt-4 flex-col space-y-3 md:space-y-0 md:space-x-6 md:flex-row md:flex md:items-center transition-all duration-500 ease-in-out"
-    [ngClass]="{ 'flex': menuOpen, 'hidden': !menuOpen, 'md:flex': true }"
+    [ngClass]="{ flex: menuOpen, hidden: !menuOpen, 'md:flex': true }"
   >
     <a
       routerLink="/"
@@ -89,72 +89,68 @@
 
     <ng-container *ngIf="user$ | async as user; else notLogged">
       @if(user.role === 3 || user.role === 4){
-        <a
-          routerLink="/admin"
-          class="text-white hover:underline flex items-center space-x-2 transition-transform duration-300 hover:-translate-y-1"
+      <a
+        routerLink="/admin"
+        class="text-white hover:underline flex items-center space-x-2 transition-transform duration-300 hover:-translate-y-1"
+      >
+        <svg
+          xmlns="http://www.w3.org/2000/svg"
+          class="h-5 w-5"
+          fill="none"
+          viewBox="0 0 24 24"
+          stroke="currentColor"
+          stroke-width="2"
         >
-          <svg
-            xmlns="http://www.w3.org/2000/svg"
-            class="h-5 w-5"
-            fill="none"
-            viewBox="0 0 24 24"
-            stroke="currentColor"
-            stroke-width="2"
-          >
-            <path
-              stroke-linecap="round"
-              stroke-linejoin="round"
-              d="M9 17v-6a2 2 0 114 0v6m-2-6V9m-4 6h8m-8 0v1a3 3 0 006 0v-1m-6 0h8"
-            />
-          </svg>
-          <span>Gestion Ressources</span>
-        </a>
-      }
-
-      @if(user.role === 4){
-        <a
-          routerLink="/admin-users"
-          class="text-white hover:underline flex items-center space-x-2 transition-transform duration-300 hover:-translate-y-1"
+          <path
+            stroke-linecap="round"
+            stroke-linejoin="round"
+            d="M9 17v-6a2 2 0 114 0v6m-2-6V9m-4 6h8m-8 0v1a3 3 0 006 0v-1m-6 0h8"
+          />
+        </svg>
+        <span>Gestion Ressources</span>
+      </a>
+      } @if(user.role === 4){
+      <a
+        routerLink="/admin-users"
+        class="text-white hover:underline flex items-center space-x-2 transition-transform duration-300 hover:-translate-y-1"
+      >
+        <svg
+          xmlns="http://www.w3.org/2000/svg"
+          class="h-5 w-5"
+          fill="none"
+          viewBox="0 0 24 24"
+          stroke="currentColor"
+          stroke-width="2"
         >
-          <svg
-            xmlns="http://www.w3.org/2000/svg"
-            class="h-5 w-5"
-            fill="none"
-            viewBox="0 0 24 24"
-            stroke="currentColor"
-            stroke-width="2"
-          >
-            <path
-              stroke-linecap="round"
-              stroke-linejoin="round"
-              d="M5.121 17.804A9 9 0 1118.879 6.196M15 12a3 3 0 11-6 0 3 3 0 016 0z"
-            />
-          </svg>
-          <span>Gestion Comptes</span>
-        </a>
-      }
-
-      @if(user.role === 2){
-        <a
-          routerLink="/moderation"
-          class="text-white hover:underline flex items-center space-x-2 transition-transform duration-300 hover:-translate-y-1"
+          <path
+            stroke-linecap="round"
+            stroke-linejoin="round"
+            d="M5.121 17.804A9 9 0 1118.879 6.196M15 12a3 3 0 11-6 0 3 3 0 016 0z"
+          />
+        </svg>
+        <span>Gestion Comptes</span>
+      </a>
+      } @if(user.role === 2){
+      <a
+        routerLink="/moderation"
+        class="text-white hover:underline flex items-center space-x-2 transition-transform duration-300 hover:-translate-y-1"
+      >
+        <svg
+          xmlns="http://www.w3.org/2000/svg"
+          class="h-5 w-5"
+          fill="none"
+          viewBox="0 0 24 24"
+          stroke="currentColor"
+          stroke-width="2"
         >
-          <svg
-            xmlns="http://www.w3.org/2000/svg"
-            class="h-5 w-5"
-            fill="none"
-            viewBox="0 0 24 24"
-            stroke="currentColor"
-            stroke-width="2"
-          >
-            <path
-              stroke-linecap="round"
-              stroke-linejoin="round"
-              d="M13 16h-1v-4h-1m1-4h.01M12 19a7 7 0 100-14 7 7 0 000 14z"
-            />
-          </svg>
-          <span>Modérer les ressources</span>
-        </a>
+          <path
+            stroke-linecap="round"
+            stroke-linejoin="round"
+            d="M13 16h-1v-4h-1m1-4h.01M12 19a7 7 0 100-14 7 7 0 000 14z"
+          />
+        </svg>
+        <span>Modérer les ressources</span>
+      </a>
       }
 
       <ng-container *ngIf="user.role === 4">
@@ -180,24 +176,59 @@
         </a>
       </ng-container>
 
-      <ng-container *ngIf="user.role === 4">
-        <a
-          routerLink="/admin-dashboard"
-          class="text-white hover:underline flex items-center space-x-2 transition-transform duration-300 hover:-translate-y-1"
-        >
-          <svg
-            xmlns="http://www.w3.org/2000/svg"
-            class="h-5 w-5"
-            fill="none"
-            viewBox="0 0 24 24"
-            stroke="currentColor"
-            stroke-width="2"
-          >
-            <path stroke-linecap="round" stroke-linejoin="round" d="M4 6h16M4 12h16M4 18h16" />
-          </svg>
-          <span>Tableau de bord admin</span>
-        </a>
-      </ng-container>
+<ng-container *ngIf="user.role === 4">
+  <a
+    routerLink="/admin-dashboard"
+    class="text-white hover:underline flex items-center space-x-2 transition-transform duration-300 hover:-translate-y-1"
+  >
+    <svg
+      xmlns="http://www.w3.org/2000/svg"
+      class="h-5 w-5"
+      fill="none"
+      viewBox="0 0 24 24"
+      stroke="currentColor"
+      stroke-width="2"
+    >
+      <path
+        stroke-linecap="round"
+        stroke-linejoin="round"
+        d="M4 6h16M4 12h16M4 18h16"
+      />
+    </svg>
+    <span>Tableau de bord admin</span>
+  </a>
+  <a
+    href="#"
+    class="text-white hover:underline flex items-center space-x-2 transition-transform duration-300 hover:-translate-y-1"
+    (click)="openSeq($event)"
+  >
+    <svg
+      xmlns="http://www.w3.org/2000/svg"
+      class="h-5 w-5"
+      fill="none"
+      viewBox="0 0 24 24"
+      stroke="currentColor"
+      stroke-width="2"
+    >
+      <path
+        stroke-linecap="round"
+        stroke-linejoin="round"
+        d="M9 17v-2a2 2 0 012-2h4a2 2 0 012 2v2"
+      />
+      <path
+        stroke-linecap="round"
+        stroke-linejoin="round"
+        d="M7 21h10a2 2 0 002-2v-7a2 2 0 00-2-2H7a2 2 0 00-2 2v7a2 2 0 002 2z"
+      />
+      <path
+        stroke-linecap="round"
+        stroke-linejoin="round"
+        d="M12 7V3m-4 4h8"
+      />
+    </svg>
+    <span>Logs</span>
+  </a>
+</ng-container>
 
       <button
         (click)="logout()"
@@ -211,7 +242,11 @@
           stroke="currentColor"
           stroke-width="2"
         >
-          <path stroke-linecap="round" stroke-linejoin="round" d="M17 16l4-4m0 0l-4-4m4 4H7" />
+          <path
+            stroke-linecap="round"
+            stroke-linejoin="round"
+            d="M17 16l4-4m0 0l-4-4m4 4H7"
+          />
         </svg>
         <span>Déconnexion</span>
       </button>
@@ -251,7 +286,11 @@
           stroke="currentColor"
           stroke-width="2"
         >
-          <path stroke-linecap="round" stroke-linejoin="round" d="M15 12H3m6 6l-6-6 6-6" />
+          <path
+            stroke-linecap="round"
+            stroke-linejoin="round"
+            d="M15 12H3m6 6l-6-6 6-6"
+          />
         </svg>
         <span>Connexion</span>
       </a>
