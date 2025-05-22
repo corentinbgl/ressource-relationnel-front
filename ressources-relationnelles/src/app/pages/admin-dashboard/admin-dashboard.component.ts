@@ -15,11 +15,11 @@ import { forkJoin } from 'rxjs';
   standalone: true,
   imports: [CommonModule, RouterModule, FormsModule],
   templateUrl: './admin-dashboard.component.html',
-  styleUrls: ['./admin-dashboard.component.scss']
+  styleUrls: ['./admin-dashboard.component.scss'],
 })
 export class AdminDashboardComponent implements OnInit {
-  allRessources: Ressource[] = [];  // données complètes
-  ressources: Ressource[] = [];      // données filtrées
+  allRessources: Ressource[] = []; // données complètes
+  ressources: Ressource[] = []; // données filtrées
 
   totalRessources = 0;
   totalFavoris = 0;
@@ -34,11 +34,11 @@ export class AdminDashboardComponent implements OnInit {
     categorie: '',
     typeRessource: '',
     relation: '',
-    zone: ''
+    zone: '',
   };
 
   categories = ['Santé', 'Éducation', 'Environnement', 'Technologie'];
-  typesRessources = ['Article', 'Vidéo', 'Image', 'Document'];
+  typesRessources = ['Publique', 'Restreinte'];
   relations = ['Amicale', 'Amoureuse', 'Familiale', 'Professionnelle'];
   zonesGeo = ['France', 'Europe', 'Amérique', 'Asie'];
 
@@ -46,7 +46,7 @@ export class AdminDashboardComponent implements OnInit {
     consultations: 2350,
     recherches: 1875,
     exploitations: 980,
-    creations: 345
+    creations: 345,
   };
 
   constructor(
@@ -62,47 +62,50 @@ export class AdminDashboardComponent implements OnInit {
   }
 
   loadAllData() {
-    this.ressourceService.getAll().subscribe(ressources => {
+    this.ressourceService.getAll().subscribe((ressources) => {
       // Simuler les champs 'relation' et 'zone' pour chaque ressource
-      ressources.forEach(r => {
+      ressources.forEach((r) => {
         r['relation'] = this.simulerRelation(r);
         r['zone'] = this.simulerZone(r);
       });
 
       this.allRessources = ressources;
-      this.totalSuspendues = ressources.filter(r => r.suspendue).length;
+      this.totalSuspendues = ressources.filter((r) => r.suspendue).length;
 
       // Calcul des créées cette semaine (sur toutes les ressources)
       const uneSemaine = 1000 * 60 * 60 * 24 * 7;
       const maintenant = Date.now();
-      this.totalCreeesCetteSemaine = ressources.filter(r => {
+      this.totalCreeesCetteSemaine = ressources.filter((r) => {
         const t = new Date(r.dateCreation).getTime();
         return maintenant - t <= uneSemaine;
       }).length;
 
       // Charger commentaires pour toutes ressources (en parallèle)
-      const commentairesObservables = ressources.map(r => 
+      const commentairesObservables = ressources.map((r) =>
         this.commentaireService.getByRessource(r.id)
       );
 
-      forkJoin(commentairesObservables).subscribe(allCommentaires => {
-        this.totalCommentaires = allCommentaires.reduce((acc, coms) => acc + coms.length, 0);
+      forkJoin(commentairesObservables).subscribe((allCommentaires) => {
+        this.totalCommentaires = allCommentaires.reduce(
+          (acc, coms) => acc + coms.length,
+          0
+        );
       });
 
       // Appliquer les filtres pour initialiser l’affichage
       this.applyFilters();
     });
 
-    this.authService.currentUser$.subscribe(user => {
+    this.authService.currentUser$.subscribe((user) => {
       if (user) {
-        this.progressionService.getForUser(user.id).subscribe(prog => {
-          this.totalFavoris = prog.filter(p => p.favori).length;
-          this.totalExploitees = prog.filter(p => p.exploitee).length;
+        this.progressionService.getForUser(user.id).subscribe((prog) => {
+          this.totalFavoris = prog.filter((p) => p.favori).length;
+          this.totalExploitees = prog.filter((p) => p.exploitee).length;
         });
       }
     });
 
-    this.userService.getAllUsers().subscribe(users => {
+    this.userService.getAllUsers().subscribe((users) => {
       this.totalUtilisateurs = users.length;
     });
   }
@@ -118,60 +121,70 @@ export class AdminDashboardComponent implements OnInit {
     const zonesGeo = this.zonesGeo;
     return zonesGeo[Math.floor(Math.random() * zonesGeo.length)];
   }
-
   applyFilters() {
     let filtered = this.allRessources;
 
     // Filtre période
-    if (this.filters.periode !== 'toutes') {
-      const now = new Date();
-      let cutoff = new Date();
+    if (this.filters.periode && this.filters.periode !== 'toutes') {
+      let cutoff: Date;
 
       switch (this.filters.periode) {
         case '7jours':
-          cutoff.setDate(now.getDate() - 7);
+          cutoff = new Date(Date.now() - 7 * 24 * 60 * 60 * 1000);
           break;
         case '30jours':
-          cutoff.setMonth(now.getMonth() - 1);
+          cutoff = new Date(Date.now() - 30 * 24 * 60 * 60 * 1000);
           break;
         case '365jours':
-          cutoff.setFullYear(now.getFullYear() - 1);
+          cutoff = new Date(Date.now() - 365 * 24 * 60 * 60 * 1000);
           break;
+        default:
+          cutoff = new Date(0);
       }
 
-      filtered = filtered.filter(r => new Date(r.dateCreation) >= cutoff);
+      filtered = filtered.filter((r) => new Date(r.dateCreation) >= cutoff);
     }
 
-    // Filtrer catégorie
     if (this.filters.categorie) {
-      filtered = filtered.filter(r => r.categorie === this.filters.categorie);
+      filtered = filtered.filter(
+        (r) =>
+          this.normalizeString(r.categorie || '') ===
+          this.normalizeString(this.filters.categorie)
+      );
     }
-
-    // Filtrer type de ressource
+    // Filtrer type de ressource (en minuscules pour éviter casse)
     if (this.filters.typeRessource) {
-      filtered = filtered.filter(r => r.type === this.filters.typeRessource);
+      filtered = filtered.filter(
+        (r) =>
+          r.type?.toLowerCase() === this.filters.typeRessource.toLowerCase()
+      );
     }
 
-    // Filtrer relation (simulée)
+    // Filtrer relation (simulée, ignore casse)
     if (this.filters.relation) {
-      filtered = filtered.filter(r => r['relation'] === this.filters.relation);
+      filtered = filtered.filter(
+        (r) =>
+          r['relation']?.toLowerCase() === this.filters.relation.toLowerCase()
+      );
     }
 
-    // Filtrer zone (simulée)
+    // Filtrer zone (simulée, ignore casse)
     if (this.filters.zone) {
-      filtered = filtered.filter(r => r['zone'] === this.filters.zone);
+      filtered = filtered.filter(
+        (r) => r['zone']?.toLowerCase() === this.filters.zone.toLowerCase()
+      );
     }
 
     this.ressources = filtered;
 
     // Mettre à jour stats selon données filtrées
     this.totalRessources = filtered.length;
-    this.totalSuspendues = filtered.filter(r => r.suspendue).length;
+    this.totalSuspendues = filtered.filter((r) => r.suspendue).length;
 
     // Calcul créées cette semaine filtrées
     const uneSemaine = 1000 * 60 * 60 * 24 * 7;
     const maintenant = Date.now();
-    this.totalCreeesCetteSemaine = filtered.filter(r => {
+    this.totalCreeesCetteSemaine = filtered.filter((r) => {
       const t = new Date(r.dateCreation).getTime();
       return maintenant - t <= uneSemaine;
     }).length;
@@ -194,7 +207,7 @@ export class AdminDashboardComponent implements OnInit {
       ['Créées cette semaine', this.totalCreeesCetteSemaine],
     ];
 
-    const csvContent = stats.map(e => e.join(';')).join('\n');
+    const csvContent = stats.map((e) => e.join(';')).join('\n');
     const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
     const link = document.createElement('a');
     const url = URL.createObjectURL(blob);
@@ -205,5 +218,13 @@ export class AdminDashboardComponent implements OnInit {
     link.click();
     document.body.removeChild(link);
     URL.revokeObjectURL(url);
+  }
+
+  normalizeString(str: string): string {
+    return str
+      .normalize('NFD')
+      .replace(/[\u0300-\u036f]/g, '')
+      .toLowerCase()
+      .trim();
   }
 }
