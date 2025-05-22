@@ -1,17 +1,49 @@
-<h2>Nombre de progressions : {{ progressions.length }}</h2>
+<div class="p-4">
+  <h2 class="text-2xl font-bold mb-6 text-center text-gray-800">
+    Nombre de progressions : {{ progressions.length }}
+  </h2>
 
-<ul *ngIf="progressions.length > 0; else noData">
-  <li *ngFor="let p of progressions">
-    <h3>{{ p.ressource?.titre || 'Titre non disponible' }}</h3>
-    <p>Description : {{ p.ressource?.description || 'Aucune description' }}</p>
-    <p>Catégorie : {{ p.ressource?.categorie || 'Non renseignée' }}</p>
-    <p>Type : {{ p.ressource?.type || 'Inconnu' }}</p>
-    <p>Favori : {{ p.favori ? 'Oui' : 'Non' }}</p>
-    <p>Exploité(e) : {{ p.exploitee ? 'Oui' : 'Non' }}</p>
-    <p>Mise de côté : {{ p.miseDeCote ? 'Oui' : 'Non' }}</p>
-  </li>
-</ul>
+  <div *ngIf="progressions.length > 0; else noData" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+    <div *ngFor="let p of progressions" class="bg-white shadow-md rounded-2xl p-4 border border-gray-200 transition hover:shadow-lg">
+      <h3 class="text-lg font-semibold text-blue-700 mb-2">
+        {{ p.ressource?.titre || 'Titre non disponible' }}
+      </h3>
+      <p class="text-gray-600 mb-1">
+        <span class="font-medium text-gray-800">Description :</span>
+        {{ p.ressource?.description || 'Aucune description' }}
+      </p>
+      <p class="text-gray-600 mb-1">
+        <span class="font-medium text-gray-800">Catégorie :</span>
+        {{ p.ressource?.categorie || 'Non renseignée' }}
+      </p>
+      <p class="text-gray-600 mb-1">
+        <span class="font-medium text-gray-800">Type :</span>
+        {{ p.ressource?.type || 'Inconnu' }}
+      </p>
+      <div class="mt-3 space-y-1">
+        <p class="text-sm">
+          <span class="font-semibold text-gray-700">Favori :</span> 
+          <span [ngClass]="p.favori ? 'text-green-600' : 'text-red-600'">
+            {{ p.favori ? 'Oui' : 'Non' }}
+          </span>
+        </p>
+        <p class="text-sm">
+          <span class="font-semibold text-gray-700">Exploité(e) :</span> 
+          <span [ngClass]="p.exploitee ? 'text-green-600' : 'text-red-600'">
+            {{ p.exploitee ? 'Oui' : 'Non' }}
+          </span>
+        </p>
+        <p class="text-sm">
+          <span class="font-semibold text-gray-700">Mise de côté :</span> 
+          <span [ngClass]="p.miseDeCote ? 'text-green-600' : 'text-red-600'">
+            {{ p.miseDeCote ? 'Oui' : 'Non' }}
+          </span>
+        </p>
+      </div>
+    </div>
+  </div>
 
-<ng-template #noData>
-  <p>Aucune progression trouvée.</p>
-</ng-template>
+  <ng-template #noData>
+    <p class="text-center text-gray-500 mt-6">Aucune progression trouvée.</p>
+  </ng-template>
+</div>

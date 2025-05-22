@@ -1,10 +1,13 @@
 import { Component, OnInit } from '@angular/core';
 import { ProgressionService } from '../../service/progression.service';
 import { AuthService } from '../../service/auth.service';
+import { CommonModule } from '@angular/common';
 
 @Component({
+  standalone: true,
   selector: 'app-progressions',
   templateUrl: 'progression.component.html',
+    imports: [CommonModule]
 })
 export class ProgressionComponent implements OnInit {
   progressions: any[] = [];
@@ -16,12 +19,10 @@ export class ProgressionComponent implements OnInit {
 
   ngOnInit(): void {
     const userId = this.authService.getUserId();
-    console.log('User ID:', userId);
     if (userId) {
       this.progressionService.getForUser(userId).subscribe({
         next: (data) => {
           this.progressions = data;
-          console.log('Données progression reçues :', this.progressions);
         },
         error: (err) => console.error(err),
       })

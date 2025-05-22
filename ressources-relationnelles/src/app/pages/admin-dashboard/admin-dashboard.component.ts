@@ -18,8 +18,8 @@ import { forkJoin } from 'rxjs';
   styleUrls: ['./admin-dashboard.component.scss'],
 })
 export class AdminDashboardComponent implements OnInit {
-  allRessources: Ressource[] = []; // données complètes
-  ressources: Ressource[] = []; // données filtrées
+  allRessources: Ressource[] = [];
+  ressources: Ressource[] = [];
 
   totalRessources = 0;
   totalFavoris = 0;
@@ -43,10 +43,10 @@ export class AdminDashboardComponent implements OnInit {
   zonesGeo = ['France', 'Europe', 'Amérique', 'Asie'];
 
   stats = {
-    consultations: 2350,
-    recherches: 1875,
-    exploitations: 980,
-    creations: 345,
+    consultations: 0,
+    recherches: 0,
+    exploitations: 0,
+    creations: 0,
   };
 
   constructor(
@@ -61,26 +61,17 @@ export class AdminDashboardComponent implements OnInit {
     this.loadAllData();
   }
 
-  loadAllData() {
+  loadAllData(): void {
     this.ressourceService.getAll().subscribe((ressources) => {
-      // Simuler les champs 'relation' et 'zone' pour chaque ressource
       ressources.forEach((r) => {
-        r['relation'] = this.simulerRelation(r);
-        r['zone'] = this.simulerZone(r);
+        r['relation'] = this.getRandomRelation();
+        r['zone'] = this.getRandomZone();
       });
 
       this.allRessources = ressources;
       this.totalSuspendues = ressources.filter((r) => r.suspendue).length;
+      this.totalCreeesCetteSemaine = this.countRecentCreations(ressources);
 
-      // Calcul des créées cette semaine (sur toutes les ressources)
-      const uneSemaine = 1000 * 60 * 60 * 24 * 7;
-      const maintenant = Date.now();
-      this.totalCreeesCetteSemaine = ressources.filter((r) => {
-        const t = new Date(r.dateCreation).getTime();
-        return maintenant - t <= uneSemaine;
-      }).length;
-
-      // Charger commentaires pour toutes ressources (en parallèle)
       const commentairesObservables = ressources.map((r) =>
         this.commentaireService.getByRessource(r.id)
       );
@@ -92,15 +83,15 @@ export class AdminDashboardComponent implements OnInit {
         );
       });
 
-      // Appliquer les filtres pour initialiser l’affichage
       this.applyFilters();
     });
 
     this.authService.currentUser$.subscribe((user) => {
       if (user) {
-        this.progressionService.getForUser(user.id).subscribe((prog) => {
-          this.totalFavoris = prog.filter((p) => p.favori).length;
-          this.totalExploitees = prog.filter((p) => p.exploitee).length;
+        this.progressionService.getForUser(user.id).subscribe((progressions) => {
+          this.totalFavoris = progressions.filter((p) => p.favori).length;
+          this.totalExploitees = progressions.filter((p) => p.exploitee).length;
+          this.updateStats();
         });
       }
     });
@@ -110,39 +101,12 @@ export class AdminDashboardComponent implements OnInit {
     });
   }
 
-  // Simulation simple pour 'relation'
-  simulerRelation(r: Ressource): string {
-    const relations = this.relations;
-    return relations[Math.floor(Math.random() * relations.length)];
-  }
+  applyFilters(): void {
+    let filtered = [...this.allRessources];
 
-  // Simulation simple pour 'zone'
-  simulerZone(r: Ressource): string {
-    const zonesGeo = this.zonesGeo;
-    return zonesGeo[Math.floor(Math.random() * zonesGeo.length)];
-  }
-  applyFilters() {
-    let filtered = this.allRessources;
-
-    // Filtre période
-    if (this.filters.periode && this.filters.periode !== 'toutes') {
-      let cutoff: Date;
-
-      switch (this.filters.periode) {
-        case '7jours':
-          cutoff = new Date(Date.now() - 7 * 24 * 60 * 60 * 1000);
-          break;
-        case '30jours':
-          cutoff = new Date(Date.now() - 30 * 24 * 60 * 60 * 1000);
-          break;
-        case '365jours':
-          cutoff = new Date(Date.now() - 365 * 24 * 60 * 60 * 1000);
-          break;
-        default:
-          cutoff = new Date(0);
-      }
-
-      filtered = filtered.filter((r) => new Date(r.dateCreation) >= cutoff);
+    const cutoff = this.getDateCutoff(this.filters.periode);
+    if (cutoff) {
+      filtered = filtered.filter((r) => new Date(r.dateCreation || 0) >= cutoff);
     }
 
     if (this.filters.categorie) {
@@ -152,7 +116,7 @@ export class AdminDashboardComponent implements OnInit {
           this.normalizeString(this.filters.categorie)
       );
     }
-    // Filtrer type de ressource (en minuscules pour éviter casse)
+
     if (this.filters.typeRessource) {
       filtered = filtered.filter(
         (r) =>
@@ -160,7 +124,6 @@ export class AdminDashboardComponent implements OnInit {
       );
     }
 
-    // Filtrer relation (simulée, ignore casse)
     if (this.filters.relation) {
       filtered = filtered.filter(
         (r) =>
@@ -168,7 +131,6 @@ export class AdminDashboardComponent implements OnInit {
       );
     }
 
-    // Filtrer zone (simulée, ignore casse)
     if (this.filters.zone) {
       filtered = filtered.filter(
         (r) => r['zone']?.toLowerCase() === this.filters.zone.toLowerCase()
@@ -176,27 +138,14 @@ export class AdminDashboardComponent implements OnInit {
     }
 
     this.ressources = filtered;
-
-    // Mettre à jour stats selon données filtrées
     this.totalRessources = filtered.length;
     this.totalSuspendues = filtered.filter((r) => r.suspendue).length;
+    this.totalCreeesCetteSemaine = this.countRecentCreations(filtered);
 
-    // Calcul créées cette semaine filtrées
-    const uneSemaine = 1000 * 60 * 60 * 24 * 7;
-    const maintenant = Date.now();
-    this.totalCreeesCetteSemaine = filtered.filter((r) => {
-      const t = new Date(r.dateCreation).getTime();
-      return maintenant - t <= uneSemaine;
-    }).length;
-
-    // Mise à jour stats "simulées"
-    this.stats.consultations = this.totalRessources * 5;
-    this.stats.recherches = this.totalRessources * 3;
-    this.stats.exploitations = this.totalExploitees; // à synchroniser avec progression, voir plus bas
-    this.stats.creations = this.totalCreeesCetteSemaine;
+    this.updateStats();
   }
 
-  exportStatsToCSV() {
+  exportStatsToCSV(): void {
     const stats = [
       ['Ressources', this.totalRessources],
       ['Favoris', this.totalFavoris],
@@ -211,9 +160,9 @@ export class AdminDashboardComponent implements OnInit {
     const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
     const link = document.createElement('a');
     const url = URL.createObjectURL(blob);
-    link.setAttribute('href', url);
-    link.setAttribute('download', 'statistiques.csv');
-    link.style.visibility = 'hidden';
+
+    link.href = url;
+    link.download = 'statistiques.csv';
     document.body.appendChild(link);
     link.click();
     document.body.removeChild(link);
@@ -226,5 +175,45 @@ export class AdminDashboardComponent implements OnInit {
       .replace(/[\u0300-\u036f]/g, '')
       .toLowerCase()
       .trim();
+  }
+
+  private getDateCutoff(periode: string): Date | null {
+    const now = Date.now();
+    switch (periode) {
+      case '7jours':
+        return new Date(now - 7 * 24 * 60 * 60 * 1000);
+      case '30jours':
+        return new Date(now - 30 * 24 * 60 * 60 * 1000);
+      case '365jours':
+        return new Date(now - 365 * 24 * 60 * 60 * 1000);
+      case 'toutes':
+        return null;
+      default:
+        return null;
+    }
+  }
+
+  private countRecentCreations(ressources: Ressource[]): number {
+    const uneSemaine = 7 * 24 * 60 * 60 * 1000;
+    const now = Date.now();
+    return ressources.filter((r) => {
+      const creationTime = new Date(r.dateCreation || 0).getTime();
+      return now - creationTime <= uneSemaine;
+    }).length;
+  }
+
+  private getRandomRelation(): string {
+    return this.relations[Math.floor(Math.random() * this.relations.length)];
+  }
+
+  private getRandomZone(): string {
+    return this.zonesGeo[Math.floor(Math.random() * this.zonesGeo.length)];
+  }
+
+  private updateStats(): void {
+    this.stats.consultations = this.totalRessources * 5;
+    this.stats.recherches = this.totalRessources * 3;
+    this.stats.exploitations = this.totalExploitees;
+    this.stats.creations = this.totalCreeesCetteSemaine;
   }
 }
