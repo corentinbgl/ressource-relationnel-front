@@ -9,7 +9,10 @@ export interface Ressource {
     validee: boolean; 
     suspendue?: boolean;
     relation?: string;  
-    zone?: string;      
+    zone?: string;
+    latitude?: number;
+    longitude?: number;
+    nom?: string; 
 
   }
   

@@ -32,4 +32,18 @@ export class HeaderComponent {
       this.router.navigate(['/']);
     }, 1500);
   }
+  openSeq(event: MouseEvent) {
+  event.preventDefault();
+
+  const width = 600;
+  const height = window.innerHeight;
+  const left = window.innerWidth - width;
+  const top = 0;
+
+  window.open(
+    'http://localhost:5341/',
+    'seqLogs',
+    `width=${width},height=${height},left=${left},top=${top},resizable=yes,scrollbars=yes`
+  );
+}
 }
