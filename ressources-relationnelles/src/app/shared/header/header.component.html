@@ -58,6 +58,11 @@
       }
 
       <ng-container *ngIf="user.role === 4">
+        <a routerLink="/progression" class="text-white hover:underline">Ma progression</a>
+      </ng-container>
+
+      
+      <ng-container *ngIf="user.role === 4">
         <a routerLink="/admin-dashboard" class="text-white hover:underline">Tableau de bord admin</a>
       </ng-container>
 

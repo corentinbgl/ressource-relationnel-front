@@ -13,7 +13,7 @@ export interface ToggleDto {
   providedIn: 'root'
 })
 export class ProgressionService {
-  private api = `${environment.apiUrl}/progression`;
+  private api = `${environment.apiUrl}/Progression`;
 
   constructor(private http: HttpClient) {}
 
@@ -24,4 +24,9 @@ export class ProgressionService {
   toggle(dto: ToggleDto): Observable<void> {
     return this.http.post<void>(`${this.api}/toggle`, dto);
   }
+
+  getForUser2(userId: number): Observable<any> {
+  return this.http.get<any>(`${this.api}/${userId}`);
+}
+
 }

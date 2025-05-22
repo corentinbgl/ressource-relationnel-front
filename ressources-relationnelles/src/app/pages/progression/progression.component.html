@@ -1,0 +1,17 @@
+<h2>Nombre de progressions : {{ progressions.length }}</h2>
+
+<ul *ngIf="progressions.length > 0; else noData">
+  <li *ngFor="let p of progressions">
+    <h3>{{ p.ressource?.titre || 'Titre non disponible' }}</h3>
+    <p>Description : {{ p.ressource?.description || 'Aucune description' }}</p>
+    <p>Catégorie : {{ p.ressource?.categorie || 'Non renseignée' }}</p>
+    <p>Type : {{ p.ressource?.type || 'Inconnu' }}</p>
+    <p>Favori : {{ p.favori ? 'Oui' : 'Non' }}</p>
+    <p>Exploité(e) : {{ p.exploitee ? 'Oui' : 'Non' }}</p>
+    <p>Mise de côté : {{ p.miseDeCote ? 'Oui' : 'Non' }}</p>
+  </li>
+</ul>
+
+<ng-template #noData>
+  <p>Aucune progression trouvée.</p>
+</ng-template>

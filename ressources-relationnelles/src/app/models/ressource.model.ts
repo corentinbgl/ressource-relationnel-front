@@ -8,6 +8,8 @@ export interface Ressource {
     userID : number
     validee: boolean; 
     suspendue?: boolean;
+    relation?: string;  
+    zone?: string;      
 
   }
   

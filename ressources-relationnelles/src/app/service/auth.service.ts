@@ -26,12 +26,9 @@ export class AuthService {
   }
 
   getUserId(): number | null {
-    const stored = this.currentUserSubject.value;
-    if (!stored) return null;
-  
-    const userId = localStorage.getItem('userId');
-    return userId ? parseInt(userId, 10) : null;
+    return this.currentUserSubject.value?.id || null;
   }
+
 
   getConnectedUser(): Observable<any> | null {
     const id = this.currentUserSubject.value?.id;
