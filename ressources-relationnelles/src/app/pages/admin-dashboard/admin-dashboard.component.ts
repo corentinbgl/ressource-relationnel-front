@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, AfterViewInit, ElementRef, ViewChild, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RessourceService } from '../../service/ressource.service';
 import { ProgressionService } from '../../service/progression.service';
@@ -9,6 +9,7 @@ import { AuthService } from '../../service/auth.service';
 import { Ressource } from '../../models/ressource.model';
 import { FormsModule } from '@angular/forms';
 import { forkJoin } from 'rxjs';
+import * as L from 'leaflet';
 
 @Component({
   selector: 'app-admin-dashboard',
@@ -21,6 +22,33 @@ export class AdminDashboardComponent implements OnInit {
   allRessources: Ressource[] = [];
   ressources: Ressource[] = [];
 
+   @ViewChild('mapContainer', { static: false }) mapContainer!: ElementRef;
+
+  map!: L.Map;
+
+  ngAfterViewInit(): void {
+    const center: L.LatLngExpression = [48.8566, 2.3522];
+    this.map = L.map(this.mapContainer.nativeElement).setView([48.8566, 2.3522], 6);
+
+    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+      attribution: '© OpenStreetMap contributors'
+    }).addTo(this.map);
+     // Générer une position aléatoire à +/- 0.5 degré autour du centre
+    const randomLat = center[0] + (Math.random() - 0.5);
+    const randomLng = center[1] + (Math.random() - 0.5);
+    const randomPosition: L.LatLngExpression = [randomLat, randomLng];
+
+    // Ajouter un cercle rouge semi-transparent à cette position
+    L.circle(randomPosition, {
+      color: 'red',
+      fillColor: '#f03',
+      fillOpacity: 0.1,
+      radius: 20000, // 20 km
+    }).addTo(this.map);
+
+    // Centrer la carte sur ce cercle
+    this.map.panTo(randomPosition);
+  }
   totalRessources = 0;
   totalFavoris = 0;
   totalExploitees = 0;
