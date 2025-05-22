@@ -73,13 +73,13 @@
               Répondre
             </button>
 
-            <button *ngIf="userEmail === com.auteur || userEmail === 'moderateur@gmail.com' || userEmail === 'sadmin@gmail.com'"
+            <button *ngIf="userEmail === com.auteur || userEmail === 'modo@gmail.com@gmail.com' || userEmail === 'sadmin@gmail.com' || userEmail === 'admin@gmail.com'"
                     (click)="startEdit(com.id, com.contenu)"
                     class="text-indigo-600 hover:underline text-sm">
               Éditer
             </button>
 
-            <button *ngIf="userEmail === 'moderateur@gmail.com' || userEmail === 'sadmin@gmail.com'"
+            <button *ngIf="userEmail === 'modo@gmail.com' || userEmail === 'sadmin@gmail.com' || userEmail === 'admin@gmail.com'"
                     (click)="deleteCommentaire(com.id)"
                     class="text-red-500 hover:underline text-sm">
               Supprimer
@@ -123,13 +123,13 @@
               <p class="text-xs text-gray-500">Réponse par : {{ reply.auteur }} - {{ reply.date | date:'short' }}</p>
 
               <div class="flex gap-4 mt-1">
-                <button *ngIf="userEmail === reply.auteur || userEmail === 'moderateur@gmail.com' || userEmail === 'sadmin@gmail.com'"
+                <button *ngIf="userEmail === reply.auteur || userEmail === 'modo@gmail.com' || userEmail === 'sadmin@gmail.com' || userEmail === 'admin@gmail.com'"
                         (click)="startEdit(reply.id, reply.contenu)"
                         class="text-indigo-600 hover:underline text-xs">
                   Éditer
                 </button>
 
-                <button *ngIf="userEmail === 'moderateur@gmail.com' || userEmail === 'sadmin@gmail.com'"
+                <button *ngIf="userEmail === 'modo@gmail.com' || userEmail === 'sadmin@gmail.com' ||userEmail === 'admin@gmail.com'"
                         (click)="deleteCommentaire(reply.id)"
                         class="text-red-500 hover:underline text-xs">
                   Supprimer
